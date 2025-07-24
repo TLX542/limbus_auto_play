@@ -183,8 +183,11 @@ try:
         if interruptible_sleep(CHECK_INTERVAL):
             break
             
-    print("Stopped by key press.")
+    print("Stopped by key press (P).")
+    input("Press Enter to exit...")
 except KeyboardInterrupt:
     print("Stopped by user.")
+    input("Press Enter to exit...")
 except Exception as e:
     print(f"Exited with error: {e}")
+    input("Please report this issue on GitHub: https://github.com/TLX542/limbus_auto_play/issues")
