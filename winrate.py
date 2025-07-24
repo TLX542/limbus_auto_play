@@ -8,11 +8,15 @@ import sys
 def load_settings():
     """Load settings from settings.ini file"""
     config = configparser.ConfigParser()
-    settings_file = 'settings.ini'
+    
+    # Get the directory where the script is located
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    settings_file = os.path.join(script_dir, 'settings.ini')
     
     # Check if settings.ini exists
     if not os.path.exists(settings_file):
-        print(f"Error: {settings_file} not found!")
+        print(f"Error: settings.ini not found!")
+        print(f"Looking for: {settings_file}")
         print("Please ensure settings.ini is in the same directory as this script.")
         input("Press Enter to exit...")
         sys.exit(1)
@@ -152,8 +156,6 @@ try:
             if color_match(pixel_color, TARGET_COLOR, TOLERANCE):
                 # First color found, now check for secondary color in surrounding area
                 if check_secondary_color(screenshot, x, CHECK_ROW):
-                    print(f"Both colors found, Primary at ({x}, {CHECK_ROW}) with color {pixel_color}")
-                    
                     # Save current cursor position (if we need to restore it later)
                     if RESET_CURSOR_POSITION:
                         original_x, original_y = pyautogui.position()
@@ -169,12 +171,10 @@ try:
                     if ALT_TAB_AFTER_CLICK:
                         time.sleep(0.2)  # Small delay before Alt+Tab
                         keyboard.press_and_release('alt+tab')
-                        print("Alt+Tab executed - switched away from game")
 
                     # Restore cursor to original position (if enabled)
                     if RESET_CURSOR_POSITION:
                         pyautogui.moveTo(original_x, original_y)
-                        print("Cursor position restored")
                     else:
                         pyautogui.moveTo(25, 25)
                     break

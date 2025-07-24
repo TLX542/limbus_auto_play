@@ -24,7 +24,7 @@ An automated script that plays Limbus Company for you by automatically detecting
 
 ### Method 1: Automatic Installation (Recommended)
 1. Download the `winrate.zip` file from the releases page
-2. Extract all files (`installer.bat`, `winrate.pyw`, and `settings.ini`) from the zip file
+2. Extract all files (`installer.bat`, `winrate.py`, and `settings.ini`) from the zip file
 3. Run `installer.bat` as Administrator
 4. The installer will:
    - Check if Python is installed
@@ -33,7 +33,7 @@ An automated script that plays Limbus Company for you by automatically detecting
 
 ### Method 2: Manual Installation
 1. Download the `winrate.zip` file from the releases page
-2. Extract all files (`installer.bat`, `winrate.pyw`, and `settings.ini`) from the zip file
+2. Extract all files (`installer.bat`, `winrate.py`, and `settings.ini`) from the zip file
 If you already have Python installed:
 ```bash
 pip install pyautogui pillow keyboard
@@ -51,8 +51,8 @@ pip install pyautogui pillow keyboard
 4. **Configure settings** (optional) - Edit `settings.ini` to customize detection parameters
 
 ### Running the Script
-1. Ensure `winrate.pyw` and `settings.ini` are in the same folder
-2. Double-click `winrate.pyw` to start the auto player
+1. Ensure `winrate.py` and `settings.ini` are in the same folder
+2. Double-click `winrate.py` to start the auto player
 3. The script will load settings from `settings.ini` and display the configuration
 4. When detected, it will automatically:
    - Click the Win Rate button
@@ -175,7 +175,7 @@ By default, the script saves your cursor position before clicking and restores i
 - Try running the game in windowed mode at a higher resolution
 
 **Settings.ini errors:**
-- Ensure `settings.ini` is in the same folder as `winrate.pyw`
+- Ensure `settings.ini` is in the same folder as `winrate.py`
 - Check that all values are properly formatted (no extra spaces, correct case for true/false)
 - RGB values must be between 0-255
 - If the file is corrupted, download a fresh copy from the releases
