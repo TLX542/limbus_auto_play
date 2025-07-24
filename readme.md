@@ -97,14 +97,13 @@ SEARCH_AREA_SIZE = 50       # Search area size around detected color
 **Use at your own risk**
 - This is an automation tool that may violate the game's Terms of Service
 - This script is designed for personal use and convenience
-- Always ensure you're complying with the game's rules and policies
 
 **Monitor usage**
 - Always supervise the script to prevent unexpected behavior
 - The script only automates repetitive clicking - it doesn't modify game files or provide unfair advantages
 
 **Game updates**
-- -*he script may need updates if the game's UI changes
+- The script may need updates if the game's UI changes
 
 ## License & Credits
 
