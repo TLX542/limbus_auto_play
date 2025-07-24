@@ -70,12 +70,9 @@ try:
                     pyautogui.moveTo(x, CHECK_ROW)
                     time.sleep(0.1)  # Small delay to ensure cursor movement
                     pyautogui.click(x, CHECK_ROW)
-                    time.sleep(0.1)  # Small delay after click
-                    
-                    # Press enter only
+                    time.sleep(0.1) 
                     keyboard.press_and_release('enter')
-                    time.sleep(0.1)
-                    
+
                     # Restore cursor to original position
                     pyautogui.moveTo(original_x, original_y)
                     break
