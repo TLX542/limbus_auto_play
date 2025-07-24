@@ -19,7 +19,8 @@ An automated script that plays Limbus Company for you by automatically detecting
 ## Installation
 
 ### Method 1: Automatic Installation (Recommended)
-1. Download both `installer.bat` and `winrate.pyw` files
+1. Download the `winrate.zip` file from the releases page
+1. Extract both the `installer.bat` and `winrate.pyw` files from the zip file
 2. Run `installer.bat` as Administrator
 3. The installer will:
    - Check if Python is installed
@@ -27,6 +28,8 @@ An automated script that plays Limbus Company for you by automatically detecting
    - Install required packages: `pyautogui`, `pillow`, and `keyboard`
 
 ### Method 2: Manual Installation
+1. Download the `winrate.zip` file from the releases page
+1. Extract both the `installer.bat` and `winrate.pyw` files from the zip file
 If you already have Python installed:
 ```bash
 pip install pyautogui pillow keyboard
