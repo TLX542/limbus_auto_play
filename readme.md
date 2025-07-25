@@ -1,182 +1,113 @@
 # Limbus Company Auto Player
 
-An automated script that plays Limbus Company for you by automatically detecting and clicking the "Win Rate" button when it appears on screen.
+> **⚠️ Important:** Use at your own risk. This automation tool may violate the game's Terms of Service. Designed for personal use and convenience only.
 
-## Project Structure
+An automated script that plays Limbus Company for you by detecting and clicking the "Win Rate" button when it appears on screen.
 
-The project has been refactored into multiple modules for better organization and maintainability:
+## 📋 Table of Contents
 
-```
-limbus_auto_player/
-├── winrate.py          # Main application entry point
-├── settings.ini        # Configuration file
-├── installer.bat       # Windows installer script
-├── README.md           # This file
-└── lib
-   ├── config.py           # Configuration management (settings.ini)
-   ├── monitor.py          # Monitor detection and resolution handling
-   ├── mouse.py            # Unified mouse control and multi-monitor clicking
-   ├── screenshot.py       # Screenshot capture functionality
-   ├── detection.py        # Button detection algorithms
-   ├── logger.py           # Debug logging system
-   ├── utils.py            # Utility functions (sleep, keyboard input, console and log output)
-   ├── scaling_utils.py    # Centralized DPI scaling calculations
-   └── library_checker.py  # Library availability checking
-```
+- [Quick Start Guide](#-quick-start-guide)
+- [What This Does](#-what-this-does)
+- [System Requirements](#-system-requirements)
+- [Installation](#-installation)
+- [Setup & Usage](#-setup--usage)
+- [Multi-Monitor Support](#-multi-monitor-support)
+- [Settings & Customization](#-settings--customization)
+- [Troubleshooting](#-troubleshooting)
+- [Advanced Features](#-advanced-features)
 
-## Features
+---
 
-- **Multi-monitor support** - Works with multiple displays and lets you choose which monitor to use
-- **Windows DPI scaling detection** - Automatically detects and handles 125%, 150%, 175%, and 200% DPI scaling
-- **Debug logging system** - Comprehensive logging for troubleshooting detection issues
-- **Modular architecture** - Clean separation of concerns for easier maintenance
-- Automatically detects the Win Rate button using color recognition
-- Clicks the button and presses Enter to continue
-- Optional Alt+Tab to switch away from game after clicking
-- Optional cursor position reset after clicking
-- Non-intrusive operation - doesn't interfere with normal gameplay
-- Easy stop mechanism with hotkey
-- Maintains cursor position after clicking
-- Scans from right to left for more efficient detection
-- **Centralized scaling utilities** - DPI scaling calculations in one place for consistency
-- **Unified mouse control** - Smart mouse function handles all clicking scenarios automatically
-- **Library availability checking** - Centralized detection of optional dependencies
-- **Resolution-independent positioning** - uses percentage-based positioning that scales automatically to any screen resolution
-- **Custom resolution support** - for non-primary monitors, you can specify exact resolutions
-- **Enhanced multi-monitor mouse control** - uses Windows API for reliable clicking across different monitors
+## 🚀 Quick Start Guide
 
-## Requirements
+**New to this? Follow these 4 simple steps:**
 
-- Windows operating system
-- Python 3.6 or higher
-- Limbus Company game installed and running
-- The game can run at any resolution - the script automatically scales detection positioning
-- For multi-monitor support: `screeninfo` package (automatically installed by installer)
-- For enhanced multi-monitor screenshots: `mss` package (recommended, automatically installed)
+1. **Download** the `limbus_auto_play.zip` file from the released tab
+2. **Extract** all files to a folder
+3. **Run** `installer.bat` as Administrator (it will install Python and required packages)
+4. **Double-click** `LAP.py` to start the auto player
 
-## Installation
+That's it! The script will guide you through the rest.
 
-### Method 1: Automatic Installation (Recommended)
-1. Download the `limbus_auto_play.zip` file from the releases page
-2. Extract all files from the zip file to a folder
-3. Run `installer.bat` as Administrator
-4. The installer will:
+---
+
+## 🎯 What This Does
+
+This script automatically:
+- **Detects** the Win Rate button on your screen
+- **Clicks** the button for you
+- **Presses Enter** to continue
+- **Tabs back to the previous window** if enabled
+- **Repeats** until you stop it
+
+**How to stop:** Press the **'P' key** at any time.
+
+### Key Features
+- ✅ Works with **multiple monitors**
+- ✅ Handles **different screen resolutions** automatically
+- ✅ Works with **Windows display scaling** (125%, 150%, etc.)
+- ✅ **Non-intrusive** - doesn't interfere with normal gameplay
+- ✅ **Easy to stop** with hotkey
+- ✅ **Debug logging** for troubleshooting
+
+---
+
+## 💻 System Requirements
+
+- **Windows** operating system
+- **Python 3.6 or higher** (installer will handle this)
+- **Limbus Company** game installed and running
+- **Any screen resolution** - the script adapts automatically
+
+---
+
+## 📦 Installation
+
+### Option 1: Automatic Installation (Recommended for Beginners)
+
+1. **Download** `limbus_auto_play.zip` from releases
+2. **Extract** all files to a folder of your choice
+3. **Right-click** on `installer.bat` and select **"Run as administrator"**
+4. **Follow the prompts** - the installer will:
    - Check if Python is installed
-   - Open Microsoft Store to install Python if needed
-   - Install required packages: `pyautogui`, `pillow`, `keyboard`, `screeninfo`, and `mss`
+   - Install Python from Microsoft Store if needed
+   - Install all required packages automatically
 
-### Method 2: Manual Installation
-1. Download the `limbus_auto_play.zip` file from the releases page
-2. Extract all files from the zip file to a folder
-If you already have Python installed:
+### Option 2: Manual Installation (For Advanced Users)
+
+If you already have Python:
 ```bash
 pip install pyautogui pillow keyboard screeninfo mss
 ```
 
-## How to Use
+---
 
-### Setup
+## 🎮 Setup & Usage
+
+### Initial Setup
+
 1. **Launch Limbus Company** on any monitor
-2. **Position the game window** so that the bottom-right corner of the game aligns with the bottom-right corner of your chosen monitor
-   - **Resolution-independent**: The script automatically adapts to your screen resolution
-3. **Multi-monitor setup**: The script will detect all available monitors and let you choose which one to use
-4. **Configure settings** (optional) - Edit `settings.ini` to customize detection parameters
+2. **Have the game in full screen** so the line checked is lined up for the program 
+3. **Make sure** the Win Rate button is visible and not covered by other windows
 
 ### Running the Script
-1. Ensure all Python files (`winrate.py`, `config.py`, etc.) and `settings.ini` are in the same folder
-2. Double-click `winrate.py` to start the auto player
-3. **Monitor Selection** (if multiple monitors detected):
-   - The script will show all available monitors
-   - Select the monitor where your game is running
-   - For non-primary monitors, you can verify or customize the resolution
-4. **DPI Scaling Detection** (automatic):
-   - The script detects common Windows DPI scaling (125%, 150%, 175%, 200%)
-   - Shows detected scaling and recommends the actual resolution
-   - **Important**: If scaling detection fails, you may need to manually select the correct resolution
-5. **Resolution Options** (for non-primary monitors):
-   - Use detected resolution (may be incorrect with DPI scaling)
-   - Use likely actual resolution (recommended when scaling is detected)
-   - Choose from common resolutions (1920×1080, 2560×1440, 3840×2160)
-   - Enter custom resolution (e.g., 1550x900)
-6. The script will load settings from `settings.ini` and display the configuration
-7. When detected, it will automatically:
-   - Click the Win Rate button
-   - Press Enter to continue
-   - Optionally Alt+Tab away from the game (if enabled)
-   - Optionally return the cursor to its original position (if enabled)
+
+1. **Double-click** `LAP.py` 
+2. **Choose your monitor** (if you have multiple screens)
+3. **Verify resolution** settings when prompted (most usually take the recommended setting)
+4. **Let it run** - the script will automatically detect and click the Win Rate button
 
 ### Stopping the Script
-- **Press the 'P' key** at any time to stop the script
-- The script will also stop if interrupted with Ctrl+C in the console
 
-## Module Overview
+- **Press 'P'** on your keyboard to stop anytime
+- Or use **Ctrl+C** in the console window
 
-### winrate.py (Main Application)
-The entry point that coordinates all other modules. Handles the main detection loop and user interaction.
+---
 
-### config.py (Configuration Management)
-Loads and validates settings from `settings.ini`. Handles configuration errors gracefully.
+## 🖥️ Multi-Monitor Support
 
-### monitor.py (Monitor Management)
-- Detects available monitors using centralized library checking
-- Handles monitor selection interface
-- **Uses centralized scaling utilities** for DPI detection and resolution correction
-- Provides custom resolution input functionality
-
-
-### mouse.py (Unified Mouse Control)
-- **Unified smart clicking** - Single `smart_click()` function handles all scenarios
-- Windows API integration with automatic fallback to pyautogui
-- Intelligent cursor positioning and restoration
-- Multi-monitor support with cursor force-movement
-- Eliminates need for multiple mouse control functions
-
-### screenshot.py (Screenshot Management)
-- Uses `mss` library for efficient multi-monitor screenshots
-- Falls back to pyautogui for single monitor setups
-- Handles monitor region definitions and DPI scaling
-
-### detection.py (Button Detection)
-- Color matching algorithms with tolerance settings
-- Secondary color verification in search areas
-- **Uses centralized scaling utilities** for coordinate calculations
-- Simplified coordinate transformation logic
-
-### logger.py (Debug Logging)
-- Configurable debug logging to `log.txt`
-- Session separation and timestamped entries
-- Supports both debug and info level logging
-
-### utils.py (Utility Functions and Unified Output)
-- Keyboard interrupt handling ('P' key to stop)
-- Interruptible sleep function for responsive controls
-- General utility functions used across modules
-- Combined console and debug log output functions
-- Eliminates duplicate configuration display code
-- Supports selective output to console, log, or both
-- Consistent formatting across all output
-
-### scaling_utils.py (DPI Scaling)
-- Centralized DPI scaling factor management
-- Automatic scaling detection for common Windows scaling (125%, 150%, 175%, 200%)
-- Coordinate transformation utilities
-- Eliminates duplicate scaling calculations across modules
-
-### library_checker.py (Library Management)
-- Centralized checking for optional libraries (screeninfo, mss, Windows API)
-- Unified error messages and installation instructions
-- Prevents duplicate import attempts across modules
-- Provides library status reporting
-
-## Multi-Monitor Support
-
-### Automatic Monitor Detection
-- The script automatically detects all connected monitors
-- Shows resolution and primary/secondary status for each monitor
-- If only one monitor is detected, it's selected automatically
-
-### Monitor Selection
-When multiple monitors are detected, you'll see a menu like:
+### Automatic Detection
+The script automatically finds all your monitors and shows them like this:
 ```
 ====== Monitor Selection ======
 1. Monitor 1: 1920x1080 (Primary)
@@ -186,377 +117,210 @@ When multiple monitors are detected, you'll see a menu like:
 Select monitor (1-3): 
 ```
 
-### DPI Scaling Handling
-Windows DPI scaling can cause incorrect resolution detection. The script:
-- **Automatically detects** common scaling factors (125%, 150%, 175%, 200%)
-- **Shows warnings** when scaled resolutions are detected
-- **Recommends actual resolution** based on detected scaling
-- **Applies scaling compensation** during coordinate calculations
+### Windows Display Scaling
+If you're using Windows display scaling (common on high-resolution monitors), the script will:
+- **Detect** common scaling levels (125%, 150%, 175%, 200%)
+- **Warn you** if scaling might cause issues
+- **Recommend** the correct resolution to use
 
-Example scaling detection:
+**Example:**
 ```
-====== Resolution Detection for Monitor 2 ======
-Windows DPI scaling can cause incorrect resolution detection.
-Detected resolution: 1536x864
 ⚠️  This looks like 1536x864 (125% scaling)
    Your actual monitor resolution is probably: 1920x1080
 ```
 
-### Resolution Verification
-For non-primary monitors, the script offers resolution options:
-- **Use detected resolution** - May be incorrect due to DPI scaling
-- **Use likely actual resolution** - Recommended when scaling is detected
-- **Common resolutions** - 1920×1080, 2560×1440, 3840×2160
-- **Custom resolution** - Enter manually (format: WIDTHxHEIGHT)
+### Resolution Options
+For non-primary monitors, you can choose:
+- **Use detected resolution** (might be wrong due to scaling)
+- **Use recommended resolution** (usually correct)
+- **Pick from common resolutions** (1920×1080, 2560×1440, 4K)
+- **Enter custom resolution** (type it manually)
 
-This ensures accurate positioning even if monitor detection or scaling compensation isn't perfect.
+---
 
-## Debug Logging System
+## ⚙️ Settings & Customization
 
-The script includes a comprehensive debug logging system to help troubleshoot detection issues.
+All settings are in the `settings.ini` file. You can edit it with any text editor (like Notepad).
 
-### Enabling Debug Logging
-1. Open `settings.ini` in a text editor
-2. Find the `[DEBUG]` section
-3. Change `DEBUG_LOGGING = false` to `DEBUG_LOGGING = true`
-4. Save the file and restart the script
+### Common Settings to Change
 
-### Debug Log Information
-When enabled, the script logs detailed information to `log.txt`:
-- **Configuration details** - Monitor settings, resolution, scaling factors
-- **Detection attempts** - Each scan with coordinate information
-- **Color matching** - Found colors vs target colors
-- **Screenshot methods** - Whether MSS or pyautogui was used
-- **Mouse operations** - Click coordinates, cursor movements
-- **Errors and warnings** - Any issues during operation
-
-### Using Debug Logs
-Debug logs help identify issues like:
-- **Color detection problems** - Check if target colors are being found
-- **Coordinate issues** - Verify click positions are correct
-- **Multi-monitor problems** - Confirm monitor positioning and scaling
-- **Screenshot failures** - Identify if MSS or pyautogui is working properly
-
-Example debug log entries:
-```
-2024-01-20 15:30:45 - INFO - Selected monitor: {'name': 'Monitor 2', 'width': 2560, 'height': 1440}
-2024-01-20 15:30:45 - DEBUG - Scaling factor: 1.25
-2024-01-20 15:30:46 - DEBUG - Scan #1...
-2024-01-20 15:30:46 - DEBUG - Found target color at relative X1200, Y1068: (59, 1, 0)
-2024-01-20 15:30:46 - DEBUG - Secondary color confirmed! Clicking...
+**Stop Alt+Tab after clicking:**
+```ini
+ALT_TAB_AFTER_CLICK = true    # Switches away from game after clicking
 ```
 
-## How It Works
+**Keep cursor in place:**
+```ini
+RESET_CURSOR_POSITION = false    # Cursor stays at button location
+```
 
-The script uses color detection to identify the Win Rate button:
-- **Primary Color**: `#3B0100` (dark red) - main button color
-- **Secondary Color**: `#F6AF64` (orange/gold) - accent color
-- **Detection Area**: Scans a horizontal line at 74.17% from the top of the selected monitor
-- **Search Range**: From right edge to center of the selected monitor (right to left scanning)
-- **Multi-Monitor Positioning**: Automatically adjusts coordinates based on monitor position and DPI scaling
-- **Verification**: Confirms both colors exist in a 50x50 pixel area
-- **Enhanced Mouse Control**: Uses Windows API for reliable multi-monitor clicking
-- When detected, it will:
-  1. Click the Winrate button on the selected monitor
-  2. Press Enter to continue
-  3. Optionally Alt+Tab away from game (if enabled)
-  4. Optionally reset cursor position (if enabled)
-  5. Wait between scans based on configured interval
-- **To stop**: Press the 'P' key at any time
+**Enable debug logging:**
+```ini
+DEBUG_LOGGING = true    # Creates detailed log.txt file for troubleshooting
+```
 
-## Configuration
+**Adjust detection timing:**
+```ini
+CHECK_INTERVAL = 2    # Wait 2 seconds between scans (default is 1)
+```
 
-All settings are now stored in `settings.ini` for easy customization without editing the Python code.
-
-### Settings File Structure
-
-The `settings.ini` file contains four sections:
+### Color Detection Settings
+*Only change these if the button isn't being detected:*
 
 ```ini
 [DETECTION]
-CHECK_ROW_PERCENTAGE = 74.17       # Percentage from top to scan (resolution-independent)
-X_START_FROM_CENTER = -1           # Start X position (-1 = screen center)
-X_END_AT_EDGE = -1                 # End X position (-1 = screen edge)
-TARGET_COLOR_R = 59                # Red component of main button color
-TARGET_COLOR_G = 1                 # Green component of main button color  
-TARGET_COLOR_B = 0                 # Blue component of main button color
-SECONDARY_COLOR_R = 246            # Red component of accent color
-SECONDARY_COLOR_G = 175            # Green component of accent color
-SECONDARY_COLOR_B = 100            # Blue component of accent color
-TOLERANCE = 10                     # Color matching tolerance
-SEARCH_AREA_SIZE = 50              # Search area size around found color
-
-[TIMING]
-CHECK_INTERVAL = 1                 # Seconds between scans
-
-[BEHAVIOR]
-ALT_TAB_AFTER_CLICK = false        # Alt+Tab after clicking
-RESET_CURSOR_POSITION = true       # Reset cursor to original position
-FORCE_CURSOR_TO_MONITOR = false    # Force cursor to target monitor before clicking
-
-[DEBUG]
-DEBUG_LOGGING = false              # Enable debug logging to log.txt
+TARGET_COLOR_R = 59        # Main button color (red part)
+TARGET_COLOR_G = 1         # Main button color (green part)
+TARGET_COLOR_B = 0         # Main button color (blue part)
+TOLERANCE = 15             # How close colors need to match (higher = more lenient)
 ```
 
-### Customizing Settings
+---
 
-1. Open `settings.ini` in any text editor
-2. Modify the values as needed
-3. Save the file
-4. Restart the script for changes to take effect
+## 🔧 Troubleshooting
 
-**Important Notes:**
-- Use `true`/`false` (lowercase) for boolean values
-- RGB values must be between 0-255
-- Position values of -1 use automatic screen-relative positioning
-- `CHECK_ROW_PERCENTAGE` should be a decimal value (e.g., 74.17 for 74.17%)
-- The script will show an error if `settings.ini` is missing or invalid
+### Button Not Being Detected
 
-### Multi-Monitor Positioning
-The script automatically handles coordinate translation for different monitors:
-- **Primary monitor**: Uses standard coordinates (0,0 at top-left)
-- **Secondary monitors**: Adjusts coordinates based on monitor position
-- **Virtual desktop**: Handles negative coordinates for monitors positioned left of primary
-- **Resolution scaling**: Percentage-based positioning works across all monitor sizes
-- **DPI scaling compensation**: Automatically adjusts for 125%, 150%, 175%, and 200% scaling
+**First, try this:**
+1. Enable debug logging: Set `DEBUG_LOGGING = true` in `settings.ini`
+2. Run the script again
+3. Check the `log.txt` file for details
 
-### Resolution Independence
-The percentage-based positioning system automatically adapts to any screen resolution on any monitor:
-- **1080p screen (1920x1080)**: 74.17% = row 801
-- **1440p screen (2560x1440)**: 74.17% = row 1068
-- **4K screen (3840x2160)**: 74.17% = row 1602
-- **Custom resolution (1550x900)**: 74.17% = row 668
+**Common fixes:**
+- Make sure the Win Rate button is **fully visible** on screen
+- Try increasing the **TOLERANCE** value in settings (try 15 or 20) (a tolerance too high might make it click something else)
+- Ensure game window is positioned in the **bottom-right** of your monitor
+- Check if you selected the **correct monitor**
 
-This ensures consistent detection across different display setups without manual adjustment.
+### Multi-Monitor Issues
 
-### DPI Scaling Compensation
-The script automatically compensates for Windows DPI scaling:
-- **125% scaling**: Coordinates multiplied by 0.80
-- **150% scaling**: Coordinates multiplied by 0.67
-- **175% scaling**: Coordinates multiplied by 0.57
-- **200% scaling**: Coordinates multiplied by 0.50
-- **100% scaling**: No compensation applied
+**Monitor not detected:**
+- Install screeninfo: Open Command Prompt and type `pip install screeninfo`
+- Restart the script
 
-### Alt+Tab Feature
-The Alt+Tab feature allows the script to automatically switch away from the game window after clicking the Win Rate button. This can be useful if you want to work on other tasks while the script runs.
+**Clicks in wrong location:**
+- **Most common cause:** Windows display scaling
+- **Solution:** Choose "Use recommended resolution" when prompted
+- **Alternative:** Use custom resolution with your monitor's actual size
 
-**To enable Alt+Tab:**
-1. Open `settings.ini` in a text editor
-2. Find the line: `ALT_TAB_AFTER_CLICK = false`
-3. Change it to: `ALT_TAB_AFTER_CLICK = true`
-4. Save the file and restart the script
+**Cursor gets stuck:**
+- Enable `FORCE_CURSOR_TO_MONITOR = true` in settings
+- Try running game in windowed mode instead of fullscreen
 
-**Benefits of Alt+Tab:**
-- Allows you to use other applications while the script runs
-- Reduces visual distraction from the game
-- Lets you monitor the script's console output more easily
-
-**Note:** When Alt+Tab is enabled, you may need to manually switch back to the game if you want to play normally or stop the script.
-
-### Cursor Position Reset
-By default, the script saves your cursor position before clicking and restores it afterward. You can disable this behavior if you prefer the cursor to remain at the Win Rate button location.
-
-**To disable cursor reset:**
-1. Open `settings.ini` in a text editor
-2. Find the line: `RESET_CURSOR_POSITION = true`
-3. Change it to: `RESET_CURSOR_POSITION = false`
-4. Save the file and restart the script
-
-**Benefits of disabling cursor reset:**
-- Cursor stays at the Win Rate button for visual confirmation
-- Slightly faster execution (no cursor movement back)
-- Useful for debugging or monitoring click locations
-
-**Benefits of keeping cursor reset enabled (default):**
-- Non-intrusive - doesn't move your cursor away from your work
-- Better for multitasking while the script runs
-- Maintains your original workflow position
-
-### Force Cursor to Monitor
-This setting helps with multi-monitor setups where the cursor might get "stuck" on monitor borders.
-
-**To enable force cursor movement:**
-1. Open `settings.ini` in a text editor
-2. Find the line: `FORCE_CURSOR_TO_MONITOR = false`
-3. Change it to: `FORCE_CURSOR_TO_MONITOR = true`
-4. Save the file and restart the script
-
-**When to enable:**
-- Multi-monitor setup with cursor movement issues
-- Secondary monitors not responding to clicks
-- Debugging coordinate problems
-
-## Troubleshooting
-
-**Script not detecting the button:**
-- **Enable debug logging** in `settings.ini` and check `log.txt` for detailed information
-- Ensure the Win Rate button is visible and not obscured on the selected monitor
-- Try adjusting the `TOLERANCE` value in `settings.ini` if colors don't match exactly
-- Verify the `TARGET_COLOR` and `SECONDARY_COLOR` RGB values in `settings.ini`
-- Check that the `CHECK_ROW_PERCENTAGE` value is appropriate for your game's UI layout
-- Ensure the game window is positioned with the Win Rate button in the bottom-right area of the selected monitor
-
-**Multi-monitor issues:**
-- If monitors aren't detected properly, install screeninfo: `pip install screeninfo`
-- Ensure the game is running on the monitor you selected
-- **Check for DPI scaling issues** - use the recommended actual resolution when scaling is detected
-- For non-primary monitors, try using custom resolution if detection seems off
-- Enable `FORCE_CURSOR_TO_MONITOR = true` in settings.ini
-- Check Windows display settings to ensure monitors are configured correctly
-- Try running the game in windowed mode for better detection consistency
-- **Review debug logs** to see coordinate translations and scaling factors
-
-**DPI Scaling Issues:**
-- **Most common issue**: Script detects scaled resolution instead of actual resolution
-- **Solution**: Select "Use likely actual resolution" when prompted during setup
-- **Manual fix**: Use custom resolution option with your monitor's actual resolution
-- **Debug**: Enable debug logging to see scaling factor and coordinate calculations
-- **Symptoms**: Clicks appear in wrong location, usually offset from button
-- **Prevention**: Run games in windowed mode to reduce scaling complications
-
-**Resolution-related issues:**
-- The script now automatically adapts to any resolution on any monitor
-- **If DPI scaling is not detected properly**, manually select the correct actual resolution
-- If you're having issues with non-primary monitors, use the custom resolution option
-- Verify that the game's Win Rate button appears at approximately 74.17% from the top of the selected monitor
-- If the button appears at a different vertical position, adjust `CHECK_ROW_PERCENTAGE` in `settings.ini`
-- Try running the game in windowed mode for better detection consistency
-- **Check debug logs** for coordinate calculations and scaling information
-
-**Settings.ini errors:**
-- Ensure `settings.ini` is in the same folder as all the Python files
-- Check that all values are properly formatted (no extra spaces, correct case for true/false)
-- RGB values must be between 0-255
-- `CHECK_ROW_PERCENTAGE` should be a decimal number (e.g., 74.17, not 74.17%)
-- If the file is corrupted, download a fresh copy from the releases
-
-**Debug Logging Issues:**
-- Ensure the script has write permissions in its directory
-- Check that `DEBUG_LOGGING = true` (lowercase) in settings.ini
-- Log file `log.txt` should appear in the same folder as the script
-- If logging fails, run the script as Administrator
-
-**Screeninfo/MSS installation issues:**
-- If multi-monitor support fails, run: `pip install screeninfo mss`
-- The script will work with single monitor even without these packages
-- For manual installation: Download wheel files and install with pip
-- If packages fail to install, try updating pip: `python -m pip install --upgrade pip`
-
-**Alt+Tab not working:**
-- Ensure no other applications are preventing window switching
-- Some fullscreen games may block Alt+Tab functionality
-- Try running the game in windowed or borderless windowed mode
+### Installation Problems
 
 **Python not found:**
-- Run the installer.bat file to automatically install Python
-- Or manually install Python from python.org and add it to your PATH
+- Run `installer.bat` as Administrator
+- If it still fails, download Python from python.org
 
 **Permission errors:**
-- Run the installer as Administrator
-- Ensure your antivirus isn't blocking the script
-- For debug logging, ensure the script can write to its directory
+- Right-click `installer.bat` and select "Run as administrator"
+- Check if antivirus is blocking the script
 
-**Clicking in wrong location:**
-- **Most likely cause**: DPI scaling not detected or compensated properly
-- **Solution**: Use debug logging to verify coordinates and scaling factors
-- **Check**: Monitor selection and resolution settings
-- **Try**: Custom resolution with your monitor's actual specifications
-- **Enable**: `FORCE_CURSOR_TO_MONITOR = true` for better cursor control
+**Script won't start:**
+- Make sure ALL files are in the same folder
+- Ensure `settings.ini` file exists
 
-**Module import errors:**
-- Ensure all Python files are in the same directory
-- Check that no files are corrupted or missing
-- Verify Python can find all modules by running: `python -c "import config, monitor, mouse, screenshot, detection, logger, utils, scaling_utils, library_checker"`
-- If a specific module fails to import, re-download that file
+### Display Scaling Issues
 
-## Development and Customization
+**Symptoms:** Clicks appear in wrong location, offset from button
+**Cause:** Windows is using display scaling (125%, 150%, etc.)
+**Solution:** 
+1. When setting up, choose "Use likely actual resolution" 
+2. Or use custom resolution with your monitor's real size
+3. Enable debug logging to see coordinate calculations
 
-### Adding New Features
-The modular structure makes it easy to add new features:
+---
 
-1. **Detection algorithms**: Modify `detection.py` to add new color detection methods
-2. **Mouse behavior**: Extend the `smart_click()` function in `mouse.py` for new clicking patterns
-3. **Monitor support**: Enhance `monitor.py` for specialized display configurations
-4. **Scaling support**: Add new scaling factors or algorithms to `scaling_utils.py`
-5. **Configuration options**: Add new settings to `config.py` and `settings.ini`
+## 🔍 Advanced Features
 
-### Code Structure Guidelines
-- **Use centralized utilities**: Scaling calculations go in `scaling_utils.py`, library checks in `library_checker.py`
-- **Single responsibility**: Each utility module handles one specific concern
-- **Avoid duplication**: Check if functionality already exists in utility modules before adding new code
-- Each module has a single responsibility
-- Use the logging system for debugging rather than print statements
-- Keep configuration in `settings.ini` rather than hardcoding values
-- Import dependencies through `library_checker.py` to catch missing packages early
+### Debug Logging System
 
-### Testing Changes
-1. Enable debug logging to monitor behavior
-2. Test with different monitor configurations
-3. Verify DPI scaling compensation works correctly
-4. Check that all configuration options function properly
+**What it does:** Creates detailed `log.txt` file showing exactly what the script is doing
 
-## Important Notes
+**When to use:**
+- Button detection isn't working
+- Clicks are in wrong location
+- Multi-monitor setup issues
 
-**Use at your own risk**
-- This is an automation tool that may violate the game's Terms of Service
-- This script is designed for personal use and convenience
+**How to enable:**
+1. Open `settings.ini`
+2. Change `DEBUG_LOGGING = false` to `DEBUG_LOGGING = true`
+3. Save and restart script
+4. Check `log.txt` file for detailed information
 
-**Monitor usage**
-- Always supervise the script to prevent unexpected behavior
-- The script only automates repetitive clicking - it doesn't modify game files or provide unfair advantages
-- Multi-monitor support makes it easier to work on other tasks while the script runs
+### Project File Structure
+```
+limbus_auto_player/
+├── LAP.py          # Main file - double-click this to start
+├── settings.ini        # Edit this to change settings
+├── installer.bat       # Run this first to install everything
+├── README.md           # This help file
+└── lib/                # Supporting files (don't modify these)
+   ├── config.py
+   ├── monitor.py
+   ├── mouse.py
+   ├── screenshot.py
+   ├── detection.py
+   ├── logger.py
+   ├── utils.py
+   ├── scaling_utils.py
+   └── library_checker.py
+```
 
-**DPI Scaling Awareness**
-- Windows DPI scaling is the most common cause of detection issues
-- The script attempts to detect and compensate for scaling automatically
-- If detection fails, manually selecting the correct resolution usually resolves issues
-- Debug logging provides detailed information about scaling calculations
+### How Detection Works
+The script looks for specific colors on your screen:
+- **Main color:** Dark red `#3B0100` (the button background)
+- **Accent color:** Orange/gold `#F6AF64` (button highlights)
+- **Search area:** Scans horizontally at 74.17% from the top of screen
+- **Direction:** Searches right to left for faster detection
 
-**Game updates**
-- The script may need updates if the game's UI changes
-- The percentage-based positioning should remain consistent across most UI updates
-- Multi-monitor support is independent of game version
-- Color values may need adjustment if the game's button colors change
+### Custom Resolution Format
+When entering custom resolution, use format: `WIDTHxHEIGHT`
+- **Examples:** `1920x1080`, `2560x1440`, `3840x2160`
+- **Don't use spaces or other characters**
 
-**System compatibility**
-- Multi-monitor support requires Windows and the screeninfo package
-- Virtual displays and unusual monitor configurations are supported
-- Works with mixed resolution setups (e.g., 1080p + 4K monitors)
-- DPI scaling compensation works with most common scaling factors
+---
 
-**Modular architecture benefits**
-- Easier maintenance and debugging
-- Individual components can be updated independently
-- Clear separation of concerns
-- Better code reusability and testing
+## 📝 Important Notes
 
-## File Dependencies
+### Safety & Terms of Service
+- **Personal use only** - don't distribute or commercialize
+- **Monitor the script** - don't leave it running unattended for hours
+- **Game updates** may require script updates if UI changes
+- **Be aware of the risks** before using automation tools
 
-Make sure all these files are present in the same directory:
+### Performance Tips
+- **Single monitor setup** is more reliable than multi-monitor
 
-### Required Files:
-- `winrate.py` - Main application (run this file)
-- `config.py` - Configuration management
-- `monitor.py` - Monitor detection and management
-- `mouse.py` - Unified mouse control and clicking
-- `screenshot.py` - Screenshot capture
-- `detection.py` - Button detection algorithms
-- `logger.py` - Debug logging system
-- `utils.py` - Utility functions and unified output functions
-- `scaling_utils.py` - DPI scaling calculations
-- `library_checker.py` - Library availability checking
-- `settings.ini` - Configuration file
+### Technical Limitations
+- **Windows only** - doesn't work on Mac or Linux
+- **GUI-based detection** - if button appearance changes, script needs updates
+- **No game modification** - only automates mouse clicks and keyboard input
+- **No unfair advantage** - just automates repetitive clicking
 
-### Optional Files:
-- `installer.bat` - Windows installation script
-- `log.txt` - Debug log file (created when debug logging is enabled)
+---
 
-## License & Credits
+## 🆘 Need More Help?
 
-This project is open source. You are free to modify, distribute, and use this code as you see fit, provided that:
-- Original author credit is maintained in any derivative works
-- Any modifications or distributions include attribution to the original creator
+### Before Asking for Help:
+1. ✅ Try the troubleshooting steps above
+2. ✅ Enable debug logging and check `log.txt`
+3. ✅ Make sure all files are in the same folder
+4. ✅ Verify your settings.ini file is correct
 
-## Disclaimer
+### When Reporting Issues:
+- **Include your Windows version** and screen resolution
+- **Attach your log.txt file** (if debug logging is enabled)
+- **Describe exactly what happens** vs what you expected
+- **List any error messages** you see
 
-This tool is provided as-is for educational and convenience purposes. Users are responsible for ensuring their use complies with all applicable terms of service and local laws. The author assumes no responsibility for any consequences resulting from the use of this software.
+---
+
+## 📄 License & Disclaimer
+
+This project is open source for educational purposes. You're free to modify and use it, but:
+- **Keep original author credit**
+- **Use at your own risk**
+- **Respect game Terms of Service**
+- **Author not responsible for consequences**
