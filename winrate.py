@@ -1,194 +1,145 @@
-import pyautogui
-import keyboard
-import time
-import configparser
-import os
-import sys
+#!/usr/bin/env python3
+"""
+Limbus Company Auto Player - Main Application
 
-def load_settings():
-    """Load settings from settings.ini file"""
-    config = configparser.ConfigParser()
+This is the main entry point for the Limbus Company automation script.
+It coordinates all the modules to detect and click the Win Rate button.
+"""
+
+import time
+import keyboard
+
+# Import our custom modules
+from lib.config import load_settings
+from lib.monitor import select_monitor, get_monitor_resolution
+from lib.mouse import smart_click
+from lib.screenshot import take_monitor_screenshot
+from lib.detection import detect_button
+from lib.logger import setup_logging, debug_log
+from lib.utils import should_stop, interruptible_sleep, display_configuration
+from lib.scaling_utils import get_scaling_factor
+
+def handle_button_click(click_x, click_y, selected_monitor, settings):
+    """Handle the button click and post-click actions"""
+    # Use the unified smart click function
+    smart_click(
+        click_x, click_y,
+        target_monitor=selected_monitor,
+        force_cursor_to_monitor=settings['force_cursor_to_monitor'],
+        restore_cursor=settings['reset_cursor_position']
+    )
     
-    # Get the directory where the script is located
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    settings_file = os.path.join(script_dir, 'settings.ini')
+    time.sleep(0.1) 
+    keyboard.press_and_release('enter')
     
-    # Check if settings.ini exists
-    if not os.path.exists(settings_file):
-        print(f"Error: settings.ini not found!")
-        print(f"Looking for: {settings_file}")
-        print("Please ensure settings.ini is in the same directory as this script.")
-        input("Press Enter to exit...")
-        sys.exit(1)
-    
+    # Optional Alt+Tab to switch away from game
+    if settings['alt_tab_after_click']:
+        time.sleep(0.2)
+        keyboard.press_and_release('alt+tab')
+
+def main():
+    """Main application loop"""
     try:
-        config.read(settings_file)
+        # Load configuration
+        base_settings = load_settings()
         
-        # Get screen dimensions
-        screen_width, screen_height = pyautogui.size()
+        # Multi-monitor setup
+        selected_monitor = select_monitor()
+        screen_width, screen_height = get_monitor_resolution(selected_monitor)
+        scaling_factor = get_scaling_factor()
         
-        # Load detection settings - now using percentage
-        check_row_percentage = config.getfloat('DETECTION', 'CHECK_ROW_PERCENTAGE', fallback=74.17)
-        check_row = int((check_row_percentage / 100) * screen_height)
+        # Store monitor offset for coordinate calculations
+        monitor_offset_x = selected_monitor['x']
+        monitor_offset_y = selected_monitor['y']
         
-        x_start_from_center = config.getint('DETECTION', 'X_START_FROM_CENTER', fallback=-1)
-        x_start = int(screen_width / 2) if x_start_from_center == -1 else x_start_from_center
+        # Calculate resolution-dependent settings
+        check_row_relative = int((base_settings['check_row_percentage'] / 100) * screen_height)
         
-        x_end_at_edge = config.getint('DETECTION', 'X_END_AT_EDGE', fallback=-1)
-        x_end = screen_width if x_end_at_edge == -1 else x_end_at_edge
+        x_start_from_center = base_settings['x_start_from_center']
+        if x_start_from_center == -1:
+            x_start_relative = int(screen_width / 2)
+        else:
+            x_start_relative = x_start_from_center
         
-        # Load colors
-        target_r = config.getint('DETECTION', 'TARGET_COLOR_R', fallback=59)
-        target_g = config.getint('DETECTION', 'TARGET_COLOR_G', fallback=1)
-        target_b = config.getint('DETECTION', 'TARGET_COLOR_B', fallback=0)
-        target_color = (target_r, target_g, target_b)
+        x_end_at_edge = base_settings['x_end_at_edge']
+        if x_end_at_edge == -1:
+            x_end_relative = screen_width
+        else:
+            x_end_relative = x_end_at_edge
         
-        secondary_r = config.getint('DETECTION', 'SECONDARY_COLOR_R', fallback=246)
-        secondary_g = config.getint('DETECTION', 'SECONDARY_COLOR_G', fallback=175)
-        secondary_b = config.getint('DETECTION', 'SECONDARY_COLOR_B', fallback=100)
-        secondary_color = (secondary_r, secondary_g, secondary_b)
-        
-        # Load other detection settings
-        tolerance = config.getint('DETECTION', 'TOLERANCE', fallback=10)
-        search_area_size = config.getint('DETECTION', 'SEARCH_AREA_SIZE', fallback=50)
-        
-        # Load timing settings
-        check_interval = config.getint('TIMING', 'CHECK_INTERVAL', fallback=2)
-        
-        # Load behavior settings
-        alt_tab_after_click = config.getboolean('BEHAVIOR', 'ALT_TAB_AFTER_CLICK', fallback=False)
-        reset_cursor_position = config.getboolean('BEHAVIOR', 'RESET_CURSOR_POSITION', fallback=True)
-        
-        return {
-            'screen_width': screen_width,
-            'screen_height': screen_height,
-            'check_row': check_row,
-            'check_row_percentage': check_row_percentage,
-            'x_start': x_start,
-            'x_end': x_end,
-            'target_color': target_color,
-            'secondary_color': secondary_color,
-            'tolerance': tolerance,
-            'search_area_size': search_area_size,
-            'check_interval': check_interval,
-            'alt_tab_after_click': alt_tab_after_click,
-            'reset_cursor_position': reset_cursor_position
+        # Combine all settings
+        settings = {
+            **base_settings,
+            'check_row_relative': check_row_relative,
+            'x_start_relative': x_start_relative,
+            'x_end_relative': x_end_relative
         }
         
-    except Exception as e:
-        print(f"Error reading settings.ini: {e}")
-        print("Please check your settings.ini file for errors.")
-        input("Press Enter to exit...")
-        sys.exit(1)
-
-# Load all settings from settings.ini
-settings = load_settings()
-
-# Extract settings for easier access
-screen_width = settings['screen_width']
-screen_height = settings['screen_height']
-CHECK_ROW = settings['check_row']
-CHECK_ROW_PERCENTAGE = settings['check_row_percentage']
-X_START = settings['x_start']
-X_END = settings['x_end']
-TARGET_COLOR = settings['target_color']
-SECONDARY_COLOR = settings['secondary_color']
-TOLERANCE = settings['tolerance']
-SEARCH_AREA_SIZE = settings['search_area_size']
-CHECK_INTERVAL = settings['check_interval']
-ALT_TAB_AFTER_CLICK = settings['alt_tab_after_click']
-RESET_CURSOR_POSITION = settings['reset_cursor_position']
-
-def color_match(c1, c2, tol):
-    return all(abs(a - b) <= tol for a, b in zip(c1, c2))
-
-def check_secondary_color(screenshot, center_x, center_y):
-    """Check if secondary color exists in 50x50 area around center point"""
-    half_size = SEARCH_AREA_SIZE // 2
-    
-    # Calculate search boundaries (ensure we don't go outside screen)
-    start_x = max(0, center_x - half_size)
-    end_x = min(screen_width, center_x + half_size)
-    start_y = max(0, center_y - half_size)
-    end_y = min(screen_height, center_y + half_size)
-    
-    # Search for secondary color in the area
-    for x in range(start_x, end_x):
-        for y in range(start_y, end_y):
-            pixel_color = screenshot.getpixel((x, y))
-            if color_match(pixel_color, SECONDARY_COLOR, TOLERANCE):
-                return True
-    return False
-
-def should_stop():
-    """Check if 'p' key is pressed"""
-    return keyboard.is_pressed('p')
-
-def interruptible_sleep(duration):
-    """Sleep for duration seconds, but check for key presses every 0.1 seconds"""
-    end_time = time.time() + duration
-    while time.time() < end_time:
-        if should_stop():
-            return True  # Signal that we should stop
-        time.sleep(0.1)
-    return False
-
-try:
-    print("====== Limbus Company Auto Player ======")
-    print("Settings loaded from settings.ini")
-    print(f"Screen resolution: {screen_width}x{screen_height}")
-    print(f"Detection area: X{X_END}-{X_START} (right to left), Y{CHECK_ROW} ({CHECK_ROW_PERCENTAGE:.2f}% from top)")
-    print(f"Target color: RGB{TARGET_COLOR}")
-    print(f"Secondary color: RGB{SECONDARY_COLOR}")
-    print(f"Tolerance: {TOLERANCE}")
-    print(f"Check interval: {CHECK_INTERVAL}s")
-    print(f"Alt+Tab after click: {'Enabled' if ALT_TAB_AFTER_CLICK else 'Disabled'}")
-    print(f"Reset cursor position: {'Enabled' if RESET_CURSOR_POSITION else 'Disabled'}")
-    print("Press 'P' to stop.")
-    print("=" * 40)
-    while True:
-        # Check for stop condition to exit
-        if should_stop():
-            break
-            
-        screenshot = pyautogui.screenshot()
-        # Changed to scan from right to left (X_END-1 down to X_START, step -1)
-        for x in range(X_END - 1, X_START - 1, -1):
-            pixel_color = screenshot.getpixel((x, CHECK_ROW))
-            if color_match(pixel_color, TARGET_COLOR, TOLERANCE):
-                # First color found, now check for secondary color in surrounding area
-                if check_secondary_color(screenshot, x, CHECK_ROW):
-                    # Save current cursor position (if we need to restore it later)
-                    if RESET_CURSOR_POSITION:
-                        original_x, original_y = pyautogui.position()
-                    
-                    # Move cursor to the found location and left click
-                    pyautogui.moveTo(x, CHECK_ROW)
-                    time.sleep(0.1)  # Small delay to ensure cursor movement
-                    pyautogui.click(x, CHECK_ROW)
-                    time.sleep(0.1) 
-                    keyboard.press_and_release('enter')
-                    
-                    # Optional Alt+Tab to switch away from game
-                    if ALT_TAB_AFTER_CLICK:
-                        time.sleep(0.2)  # Small delay before Alt+Tab
-                        keyboard.press_and_release('alt+tab')
-
-                    # Restore cursor to original position (if enabled)
-                    if RESET_CURSOR_POSITION:
-                        pyautogui.moveTo(original_x, original_y)
-                    else:
-                        pyautogui.moveTo(25, 25)
-                    break
+        # Setup logging after we have the debug setting
+        setup_logging(settings['debug_logging'], settings['script_dir'])
         
-        # Interruptible sleep that can be stopped by key press
-        if interruptible_sleep(CHECK_INTERVAL):
-            break
+        # Display configuration (both console and log if debug enabled)
+        display_configuration(
+            settings, selected_monitor, screen_width, screen_height, 
+            monitor_offset_x, monitor_offset_y, 
+            to_console=True, to_log=settings['debug_logging']
+        )
+        
+        # Prepare detection settings
+        detection_settings = {
+            'x_start_relative': x_start_relative,
+            'x_end_relative': x_end_relative,
+            'check_row_relative': check_row_relative,
+            'target_color': settings['target_color'],
+            'secondary_color': settings['secondary_color'],
+            'tolerance': settings['tolerance'],
+            'search_area_size': settings['search_area_size']
+        }
+        
+        monitor_settings = {
+            'monitor_offset_x': monitor_offset_x,
+            'monitor_offset_y': monitor_offset_y
+        }
+        
+        # Main detection loop
+        scan_count = 0
+        while True:
+            # Check for stop condition to exit
+            if should_stop():
+                break
             
-    print("Stopped by key press (P).\nGoodbye!")
-except KeyboardInterrupt:
-    print("Stopped by user.")
-    input("Press Enter to exit...")
-except Exception as e:
-    print(f"Exited with error: {e}")
-    input("Please report this issue on GitHub: https://github.com/TLX542/limbus_auto_play/issues\nPress Enter to exit...")
+            scan_count += 1
+            debug_log(f"Scan #{scan_count}...")
+            
+            # Take screenshot using appropriate method
+            screenshot, used_mss = take_monitor_screenshot(selected_monitor, screen_width, screen_height)
+            
+            # Detect the button (removed scaling_factor parameter as it's now handled internally)
+            button_found, click_x, click_y = detect_button(
+                screenshot, used_mss, detection_settings, monitor_settings
+            )
+            
+            if button_found:
+                debug_log("Button clicked successfully!")
+                handle_button_click(click_x, click_y, selected_monitor, settings)
+            else:
+                debug_log("Win Rate button not detected in this scan")
+            
+            # Interruptible sleep that can be stopped by key press
+            if interruptible_sleep(settings['check_interval']):
+                break
+                
+        debug_log("Stopped by key press (P). Goodbye!")
+        print("Stopped by key press (P).\nGoodbye!")
+        
+    except KeyboardInterrupt:
+        debug_log("Stopped by user interrupt (Ctrl+C)")
+        print("Stopped by user.")
+        input("Press Enter to exit...")
+    except Exception as e:
+        debug_log(f"Exited with error: {e}")
+        print(f"Exited with error: {e}")
+        input("Please report this issue on GitHub: https://github.com/TLX542/limbus_auto_play/issues\nPress Enter to exit...")
+
+if __name__ == "__main__":
+    main()
