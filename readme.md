@@ -57,7 +57,7 @@ limbus_auto_player/
 ## Installation
 
 ### Method 1: Automatic Installation (Recommended)
-1. Download the `winrate.zip` file from the releases page
+1. Download the `limbus_auto_play.zip` file from the releases page
 2. Extract all files from the zip file to a folder
 3. Run `installer.bat` as Administrator
 4. The installer will:
@@ -66,7 +66,7 @@ limbus_auto_player/
    - Install required packages: `pyautogui`, `pillow`, `keyboard`, `screeninfo`, and `mss`
 
 ### Method 2: Manual Installation
-1. Download the `winrate.zip` file from the releases page
+1. Download the `limbus_auto_play.zip` file from the releases page
 2. Extract all files from the zip file to a folder
 If you already have Python installed:
 ```bash
