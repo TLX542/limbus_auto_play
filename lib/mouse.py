@@ -1,7 +1,7 @@
 import time
 import pyautogui
-from logger import debug_log
-from library_checker import is_available
+from .logger import debug_log
+from .library_checker import is_available
 
 # Get library availability
 WINDOWS_MOUSE_AVAILABLE = is_available('windows_mouse')

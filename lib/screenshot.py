@@ -1,7 +1,7 @@
 import pyautogui
 from PIL import Image
-from logger import debug_log
-from library_checker import is_available
+from .logger import debug_log
+from .library_checker import is_available
 
 # Import mss if available
 if is_available('mss'):

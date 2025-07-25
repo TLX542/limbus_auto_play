@@ -4,18 +4,20 @@ import sys
 
 
 def load_settings():
-    """Load settings from settings.ini file"""
+    """Load settings from settings.ini file in parent directory"""
     config = configparser.ConfigParser()
     
     # Get the directory where the script is located
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    settings_file = os.path.join(script_dir, 'settings.ini')
+    # Get the parent directory
+    parent_dir = os.path.dirname(script_dir)
+    settings_file = os.path.join(parent_dir, 'settings.ini')
     
     # Check if settings.ini exists
     if not os.path.exists(settings_file):
         print(f"Error: settings.ini not found!")
         print(f"Looking for: {settings_file}")
-        print("Please ensure settings.ini is in the same directory as this script.")
+        print("Please ensure settings.ini is in the parent directory of this script.")
         input("Press Enter to exit...")
         sys.exit(1)
     

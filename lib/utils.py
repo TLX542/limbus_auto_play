@@ -20,8 +20,8 @@ def interruptible_sleep(duration):
 Centralized output utilities for consistent logging and console output
 """
 
-from logger import debug_log
-from library_checker import is_available
+from .logger import debug_log
+from .library_checker import is_available
 
 def display_configuration(settings, selected_monitor, screen_width, screen_height, 
                          monitor_offset_x, monitor_offset_y, to_console=True, to_log=False):

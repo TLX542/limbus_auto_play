@@ -1,5 +1,5 @@
-from logger import debug_log
-from scaling_utils import apply_scaling
+from .logger import debug_log
+from .scaling_utils import apply_scaling
 
 def color_match(c1, c2, tol):
     """Check if two colors match within tolerance"""

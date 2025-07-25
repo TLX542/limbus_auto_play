@@ -1,6 +1,6 @@
 import pyautogui
-from library_checker import is_available
-from scaling_utils import detect_likely_scaling, set_scaling_factor
+from .library_checker import is_available
+from .scaling_utils import detect_likely_scaling, set_scaling_factor
 
 # Import screeninfo if available
 if is_available('screeninfo'):
