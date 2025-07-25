@@ -27,9 +27,9 @@ def load_settings():
         # Get screen dimensions
         screen_width, screen_height = pyautogui.size()
         
-        # Load detection settings
-        check_row_from_bottom = config.getint('DETECTION', 'CHECK_ROW_FROM_BOTTOM', fallback=279)
-        check_row = screen_height - check_row_from_bottom
+        # Load detection settings - now using percentage
+        check_row_percentage = config.getfloat('DETECTION', 'CHECK_ROW_PERCENTAGE', fallback=74.17)
+        check_row = int((check_row_percentage / 100) * screen_height)
         
         x_start_from_center = config.getint('DETECTION', 'X_START_FROM_CENTER', fallback=-1)
         x_start = int(screen_width / 2) if x_start_from_center == -1 else x_start_from_center
@@ -63,6 +63,7 @@ def load_settings():
             'screen_width': screen_width,
             'screen_height': screen_height,
             'check_row': check_row,
+            'check_row_percentage': check_row_percentage,
             'x_start': x_start,
             'x_end': x_end,
             'target_color': target_color,
@@ -87,6 +88,7 @@ settings = load_settings()
 screen_width = settings['screen_width']
 screen_height = settings['screen_height']
 CHECK_ROW = settings['check_row']
+CHECK_ROW_PERCENTAGE = settings['check_row_percentage']
 X_START = settings['x_start']
 X_END = settings['x_end']
 TARGET_COLOR = settings['target_color']
@@ -135,7 +137,7 @@ try:
     print("====== Limbus Company Auto Player ======")
     print("Settings loaded from settings.ini")
     print(f"Screen resolution: {screen_width}x{screen_height}")
-    print(f"Detection area: X{X_END}-{X_START} (right to left), Y{CHECK_ROW}")
+    print(f"Detection area: X{X_END}-{X_START} (right to left), Y{CHECK_ROW} ({CHECK_ROW_PERCENTAGE:.2f}% from top)")
     print(f"Target color: RGB{TARGET_COLOR}")
     print(f"Secondary color: RGB{SECONDARY_COLOR}")
     print(f"Tolerance: {TOLERANCE}")
@@ -183,11 +185,10 @@ try:
         if interruptible_sleep(CHECK_INTERVAL):
             break
             
-    print("Stopped by key press (P).")
-    input("Press Enter to exit...")
+    print("Stopped by key press (P).\nGoodbye!")
 except KeyboardInterrupt:
     print("Stopped by user.")
     input("Press Enter to exit...")
 except Exception as e:
     print(f"Exited with error: {e}")
-    input("Please report this issue on GitHub: https://github.com/TLX542/limbus_auto_play/issues")
+    input("Please report this issue on GitHub: https://github.com/TLX542/limbus_auto_play/issues\nPress Enter to exit...")

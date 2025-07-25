@@ -12,13 +12,14 @@ An automated script that plays Limbus Company for you by automatically detecting
 - Easy stop mechanism with hotkey
 - Maintains cursor position after clicking
 - Scans from right to left for more efficient detection
+- **Resolution-independent positioning** - uses percentage-based positioning that scales automatically to any screen resolution
 
 ## Requirements
 
 - Windows operating system
 - Python 3.6 or higher
 - Limbus Company game installed and running
-- **High resolution display recommended** - The game needs to be running at a reasonably high resolution for accurate pixel color detection. Lower resolutions may cause pixel color variations that prevent proper detection of the Win Rate button.
+- The game can run at any resolution - the script automatically scales detection positioning
 
 ## Installation
 
@@ -42,11 +43,11 @@ pip install pyautogui pillow keyboard
 ## How to Use
 
 ### Setup
-1. **Launch Limbus Company** and ensure it's running at a high resolution for best detection accuracy
+1. **Launch Limbus Company** at any resolution you prefer
 2. **Position the game window** so that the bottom-right corner of the game aligns with the bottom-right corner of your screen
    - The game doesn't need to be fullscreen
    - Just ensure the Win Rate button area is visible in the bottom-right corner
-   - **Important**: Use a high resolution setting in the game to ensure consistent pixel colors
+   - **Resolution-independent**: The script automatically adapts to your screen resolution
 3. **Make sure you're on the correct monitor** - both the game and script must run on the same screen
 4. **Configure settings** (optional) - Edit `settings.ini` to customize detection parameters
 
@@ -69,7 +70,7 @@ pip install pyautogui pillow keyboard
 The script uses color detection to identify the Win Rate button:
 - **Primary Color**: `#3B0100` (dark red) - main button color
 - **Secondary Color**: `#F6AF64` (orange/gold) - accent color
-- **Detection Area**: Scans a horizontal line 279 pixels from the bottom of the screen
+- **Detection Area**: Scans a horizontal line at 74.17% from the top of the screen (automatically scales to any resolution)
 - **Search Range**: From right edge of screen to center (right to left scanning)
 - **Verification**: Confirms both colors exist in a 50x50 pixel area
 - When detected, it will:
@@ -77,7 +78,7 @@ The script uses color detection to identify the Win Rate button:
   2. Press Enter to continue
   3. Optionally Alt+Tab away from game (if enabled)
   4. Optionally reset cursor position (if enabled)
-  5. Wait 2 seconds before scanning again
+  5. Wait between scans based on configured interval
 - **To stop**: Press the 'P' key at any time
 
 ## Configuration
@@ -90,24 +91,24 @@ The `settings.ini` file contains three sections:
 
 ```ini
 [DETECTION]
-CHECK_ROW_FROM_BOTTOM = 279     # Pixels from bottom to scan
-X_START_FROM_CENTER = -1        # Start X position (-1 = screen center)
-X_END_AT_EDGE = -1              # End X position (-1 = screen edge)
-TARGET_COLOR_R = 59             # Red component of main button color
-TARGET_COLOR_G = 1              # Green component of main button color  
-TARGET_COLOR_B = 0              # Blue component of main button color
-SECONDARY_COLOR_R = 246         # Red component of accent color
-SECONDARY_COLOR_G = 175         # Green component of accent color
-SECONDARY_COLOR_B = 100         # Blue component of accent color
-TOLERANCE = 10                  # Color matching tolerance
-SEARCH_AREA_SIZE = 50           # Search area size around found color
+CHECK_ROW_PERCENTAGE = 74.17       # Percentage from top to scan (resolution-independent)
+X_START_FROM_CENTER = -1           # Start X position (-1 = screen center)
+X_END_AT_EDGE = -1                 # End X position (-1 = screen edge)
+TARGET_COLOR_R = 59                # Red component of main button color
+TARGET_COLOR_G = 1                 # Green component of main button color  
+TARGET_COLOR_B = 0                 # Blue component of main button color
+SECONDARY_COLOR_R = 246            # Red component of accent color
+SECONDARY_COLOR_G = 175            # Green component of accent color
+SECONDARY_COLOR_B = 100            # Blue component of accent color
+TOLERANCE = 10                     # Color matching tolerance
+SEARCH_AREA_SIZE = 50              # Search area size around found color
 
 [TIMING]
-CHECK_INTERVAL = 2              # Seconds between scans
+CHECK_INTERVAL = 1                 # Seconds between scans
 
 [BEHAVIOR]
-ALT_TAB_AFTER_CLICK = false     # Alt+Tab after clicking
-RESET_CURSOR_POSITION = true    # Reset cursor to original position
+ALT_TAB_AFTER_CLICK = true         # Alt+Tab after clicking
+RESET_CURSOR_POSITION = true       # Reset cursor to original position
 ```
 
 ### Customizing Settings
@@ -121,7 +122,17 @@ RESET_CURSOR_POSITION = true    # Reset cursor to original position
 - Use `true`/`false` (lowercase) for boolean values
 - RGB values must be between 0-255
 - Position values of -1 use automatic screen-relative positioning
+- `CHECK_ROW_PERCENTAGE` should be a decimal value (e.g., 74.17 for 74.17%)
 - The script will show an error if `settings.ini` is missing or invalid
+
+### Resolution Independence
+The new percentage-based positioning system automatically adapts to any screen resolution:
+- **1080p screen (1920x1080)**: 74.17% = row 801
+- **1440p screen (2560x1440)**: 74.17% = row 1068
+- **4K screen (3840x2160)**: 74.17% = row 1602
+- **Smaller screens (1366x768)**: 74.17% = row 570
+
+This ensures consistent detection across different display setups without manual adjustment.
 
 ### Alt+Tab Feature
 The Alt+Tab feature allows the script to automatically switch away from the game window after clicking the Win Rate button. This can be useful if you want to work on other tasks while the script runs.
@@ -161,23 +172,23 @@ By default, the script saves your cursor position before clicking and restores i
 ## Troubleshooting
 
 **Script not detecting the button:**
-- **Ensure the game is running at high resolution** - Low resolution settings can cause pixel color variations that prevent detection
-- Ensure the winrate is present in your screen's bottom-right corner
-- Check that the Win Rate button is visible and not obscured
+- Ensure the Win Rate button is visible and not obscured
 - Try adjusting the `TOLERANCE` value in `settings.ini` if colors don't match exactly
 - Verify the `TARGET_COLOR` and `SECONDARY_COLOR` RGB values in `settings.ini`
-- Consider increasing the game's resolution or display scale for better pixel accuracy
+- Check that the `CHECK_ROW_PERCENTAGE` value is appropriate for your game's UI layout
+- Ensure the game window is positioned with the Win Rate button in the bottom-right area of your screen
 
 **Resolution-related issues:**
-- If detection is inconsistent, try increasing your display resolution
-- Ensure the game is not running in a very low resolution mode
-- Some scaling settings may affect pixel color accuracy
-- Try running the game in windowed mode at a higher resolution
+- The script now automatically adapts to any resolution, but if you're having issues:
+- Verify that the game's Win Rate button appears at approximately 74.17% from the top of your screen
+- If the button appears at a different vertical position, adjust `CHECK_ROW_PERCENTAGE` in `settings.ini`
+- Try running the game in windowed mode for better detection consistency
 
 **Settings.ini errors:**
 - Ensure `settings.ini` is in the same folder as `winrate.py`
 - Check that all values are properly formatted (no extra spaces, correct case for true/false)
 - RGB values must be between 0-255
+- `CHECK_ROW_PERCENTAGE` should be a decimal number (e.g., 74.17, not 74.17%)
 - If the file is corrupted, download a fresh copy from the releases
 
 **Alt+Tab not working:**
@@ -205,7 +216,7 @@ By default, the script saves your cursor position before clicking and restores i
 
 **Game updates**
 - The script may need updates if the game's UI changes
-- Resolution and display settings may affect detection accuracy
+- The percentage-based positioning should remain consistent across most UI updates
 
 ## License & Credits
 
