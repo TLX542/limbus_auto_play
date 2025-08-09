@@ -2,7 +2,7 @@
 
 > **⚠️ Important:** Use at your own risk. This automation tool may violate the game's Terms of Service. Designed for personal use and convenience only.
 
-An automated script that plays Limbus Company for you by detecting and clicking the "Win Rate" button when it appears on screen.
+An automated script with a user-friendly GUI that plays Limbus Company for you by detecting and clicking the "Win Rate" button when it appears on screen.
 
 ## 📋 Table of Contents
 
@@ -11,6 +11,7 @@ An automated script that plays Limbus Company for you by detecting and clicking 
 - [System Requirements](#-system-requirements)
 - [Installation](#-installation)
 - [Setup & Usage](#-setup--usage)
+- [GUI Interface](#-gui-interface)
 - [Multi-Monitor Support](#-multi-monitor-support)
 - [Settings & Customization](#-settings--customization)
 - [Troubleshooting](#-troubleshooting)
@@ -25,9 +26,9 @@ An automated script that plays Limbus Company for you by detecting and clicking 
 1. **Download** the `limbus_auto_play.zip` file from the released tab
 2. **Extract** all files to a folder
 3. **Run** `installer.bat` as Administrator (it will install Python and required packages)
-4. **Double-click** `LAP.py` to start the auto player
+4. **Double-click** `LAP.pyw` to start the GUI auto player
 
-That's it! The script will guide you through the rest.
+That's it! The GUI will guide you through the rest.
 
 ---
 
@@ -40,15 +41,18 @@ This script automatically:
 - **Tabs back to the previous window** if enabled
 - **Repeats** until you stop it
 
-**How to stop:** Press the **'P' key** at any time.
+**How to stop:** Press the **'P' key** anywhere or use the GUI controls.
 
 ### Key Features
+- ✅ **Modern GUI Interface** - easy-to-use tabbed interface
 - ✅ Works with **multiple monitors**
 - ✅ Handles **different screen resolutions** automatically
 - ✅ Works with **Windows display scaling** (125%, 150%, etc.)
 - ✅ **Non-intrusive** - doesn't interfere with normal gameplay
-- ✅ **Easy to stop** with hotkey
-- ✅ **Debug logging** for troubleshooting
+- ✅ **Easy to stop/pause** with hotkey or GUI buttons
+- ✅ **Real-time status updates** and configuration display
+- ✅ **Debug logging** viewer built into the GUI
+- ✅ **Live settings management** - change settings without restarting
 
 ---
 
@@ -90,195 +94,306 @@ pip install pyautogui pillow keyboard screeninfo mss
 2. **Have the game in full screen** so the line checked is lined up for the program 
 3. **Make sure** the Win Rate button is visible and not covered by other windows
 
-### Running the Script
+### Running the Application
 
-1. **Double-click** `LAP.py` 
-2. **Choose your monitor** (if you have multiple screens)
-3. **Verify resolution** settings when prompted (most usually take the recommended setting)
-4. **Let it run** - the script will automatically detect and click the Win Rate button
+1. **Double-click** `LAP.pyw` to open the GUI
+2. **Configure your settings** using the tabbed interface:
+   - **Control Tab**: Start/stop detection and view real-time status
+   - **Settings Tab**: Adjust detection parameters and behavior
+   - **Display Tab**: Select monitor and resolution settings
+   - **Log Tab**: View detailed debug information
 
-### Stopping the Script
+### Using the GUI
 
-- **Press 'P'** on your keyboard to stop anytime
-- Or use **Ctrl+C** in the console window
+#### Control Tab
+- **Start/Stop Detection**: Main control button to begin automation
+- **Pause/Resume**: Temporarily pause without stopping (also works with 'P' key)
+- **Current Configuration**: View your current settings at a glance
+- **Real-time Status**: See what the script is doing moment by moment
+
+#### Settings Tab
+- **Behavior Options**: Configure Alt+Tab, cursor behavior, and debug logging
+- **Detection Timing**: Adjust scan interval and color tolerance
+- **Color Configuration**: Fine-tune target and secondary colors with live previews
+
+#### Display Tab
+- **Monitor Selection**: Choose which monitor to scan (multi-monitor setups)
+- **Resolution Settings**: Set correct resolution with scaling recommendations
+- **Library Status**: Check if all optional libraries are available
+
+#### Log Tab
+- **Debug Log Viewer**: View detailed logs without opening external files
+- **Real-time Updates**: See debug information as it happens
+- **Log Management**: Clear or refresh log content
+
+### Stopping the Application
+
+- **Press 'P'** anywhere on your keyboard to pause/resume
+- **Use GUI buttons** to stop, pause, or resume
+- **Close the window** to save settings and exit
+
+---
+
+## 🖥️ GUI Interface
+
+### Tabbed Interface
+The application now features a modern tabbed interface:
+
+**Control Tab** - Main operations:
+- Start/Stop detection with visual feedback
+- Pause/Resume functionality 
+- Real-time configuration display
+- Live status updates
+
+**Settings Tab** - Configuration:
+- Behavior settings (Alt+Tab, cursor control)
+- Detection timing and tolerance
+- Color settings with live previews
+- All changes apply immediately
+
+**Display Tab** - Monitor & resolution:
+- Multi-monitor selection
+- Resolution configuration with scaling detection
+- DPI scaling recommendations
+- Library status checking
+
+**Log Tab** - Debug information:
+- Real-time debug log viewing
+- Log management tools
+- No need to open external files
+
+### Real-time Updates
+- **Configuration Display**: Always shows current settings
+- **Status Messages**: Live updates on what the script is doing
+- **Visual Feedback**: Button states reflect current operation
+- **Settings Persistence**: Changes save automatically
 
 ---
 
 ## 🖥️ Multi-Monitor Support
 
-### Automatic Detection
-The script automatically finds all your monitors and shows them like this:
-```
-====== Monitor Selection ======
-1. Monitor 1: 1920x1080 (Primary)
-2. Monitor 2: 2560x1440
-3. Monitor 3: 3840x2160
-
-Select monitor (1-3): 
-```
+### GUI Monitor Selection
+The Display tab automatically detects all monitors and provides:
+- **Drop-down selection** with monitor names and resolutions
+- **Primary monitor indication** for easy identification
+- **Automatic resolution suggestions** based on detected scaling
 
 ### Windows Display Scaling
-If you're using Windows display scaling (common on high-resolution monitors), the script will:
-- **Detect** common scaling levels (125%, 150%, 175%, 200%)
-- **Warn you** if scaling might cause issues
-- **Recommend** the correct resolution to use
+The GUI automatically handles display scaling:
+- **Detects** common scaling levels (125%, 150%, 175%, 200%)
+- **Provides recommendations** in the resolution dropdown
+- **Visual warnings** when scaling might cause issues
 
-**Example:**
+**Example in GUI:**
 ```
-⚠️  This looks like 1536x864 (125% scaling)
-   Your actual monitor resolution is probably: 1920x1080
+Resolution dropdown shows:
+- 1920x1080 (Recommended - 125% scaling detected)
+- 1536x864 (Detected resolution - may be scaled)
+- 2560x1440
+- Custom...
 ```
 
-### Resolution Options
-For non-primary monitors, you can choose:
-- **Use detected resolution** (might be wrong due to scaling)
-- **Use recommended resolution** (usually correct)
-- **Pick from common resolutions** (1920×1080, 2560×1440, 4K)
-- **Enter custom resolution** (type it manually)
+### Smart Resolution Detection
+The Display tab provides multiple resolution options:
+- **Recommended resolution** (accounts for scaling)
+- **Detected resolution** (current monitor setting)
+- **Common resolutions** (standard options)
+- **Custom resolution** (manual entry dialog)
 
 ---
 
 ## ⚙️ Settings & Customization
 
-All settings are in the `settings.ini` file. You can edit it with any text editor (like Notepad).
+### GUI Settings Management
+All settings can now be managed through the **Settings Tab**:
 
-### Common Settings to Change
+**Behavior Settings:**
+- ☑️ Alt+Tab after click (switch away from game)
+- ☑️ Reset cursor position after click
+- ☑️ Force cursor to monitor before click
+- ☑️ Enable debug logging
 
-**Stop Alt+Tab after clicking:**
-```ini
-ALT_TAB_AFTER_CLICK = true    # Switches away from game after clicking
-```
+**Detection Settings:**
+- **Check interval**: Adjustable from 0.1 to 10.0 seconds
+- **Color tolerance**: Fine-tune detection sensitivity (1-50)
 
-**Keep cursor in place:**
-```ini
-RESET_CURSOR_POSITION = false    # Cursor stays at button location
-```
+**Color Configuration:**
+- **Target Color**: Button background color with live preview
+- **Secondary Color**: Text color with live preview
+- **RGB sliders**: Precise color adjustment
 
-**Enable debug logging:**
-```ini
-DEBUG_LOGGING = true    # Creates detailed log.txt file for troubleshooting
-```
-
-**Adjust detection timing:**
-```ini
-CHECK_INTERVAL = 2    # Wait 2 seconds between scans (default is 1)
-```
-
-### Color Detection Settings
-*Only change these if the button isn't being detected:*
+### Settings File
+Settings are still stored in `settings.ini` and can be edited manually:
 
 ```ini
 [DETECTION]
-TARGET_COLOR_R = 59        # Main button color (red part)
-TARGET_COLOR_G = 1         # Main button color (green part)
-TARGET_COLOR_B = 0         # Main button color (blue part)
-TOLERANCE = 15             # How close colors need to match (higher = more lenient)
+TARGET_COLOR_R = 59
+TARGET_COLOR_G = 1
+TARGET_COLOR_B = 0
+SECONDARY_COLOR_R = 246
+SECONDARY_COLOR_G = 175
+SECONDARY_COLOR_B = 100
+TOLERANCE = 10
+
+[TIMING]
+CHECK_INTERVAL = 1.0
+
+[BEHAVIOR]
+ALT_TAB_AFTER_CLICK = false
+RESET_CURSOR_POSITION = true
+FORCE_CURSOR_TO_MONITOR = false
+
+[DEBUG]
+DEBUG_LOGGING = false
+
+[GUI]
+SELECTED_MONITOR = Primary Monitor
+RESOLUTION = 1920x1080
 ```
+
+### Real-time Configuration
+Changes made in the GUI:
+- **Apply immediately** - no restart required
+- **Auto-save** when you close the application
+- **Manual save** button available in Control tab
 
 ---
 
 ## 🔧 Troubleshooting
 
+### GUI-Specific Issues
+
+**Application won't start:**
+- Ensure all files are in the same folder
+- Check that `settings.ini` exists
+- Run `installer.bat` as Administrator to reinstall dependencies
+
+**Settings not saving:**
+- Check file permissions in the application folder
+- Ensure you have write access to the directory
+- Use the "Save Settings" button in the Control tab
+
 ### Button Not Being Detected
 
-**First, try this:**
-1. Enable debug logging: Set `DEBUG_LOGGING = true` in `settings.ini`
-2. Run the script again
-3. Check the `log.txt` file for details
+**Use the GUI to troubleshoot:**
+1. **Settings Tab**: Enable "Debug logging"
+2. **Control Tab**: Start detection and watch status messages
+3. **Log Tab**: View detailed debug information in real-time
+4. **Settings Tab**: Adjust tolerance if needed (try 15-20)
 
-**Common fixes:**
-- Make sure the Win Rate button is **fully visible** on screen
-- Try increasing the **TOLERANCE** value in settings (try 15 or 20) (a tolerance too high might make it click something else)
-- Ensure game window is positioned in the **bottom-right** of your monitor
-- Check if you selected the **correct monitor**
+**Color Detection Issues:**
+- **Settings Tab**: Use color previews to verify target colors
+- **Display Tab**: Ensure correct monitor and resolution are selected
+- **Control Tab**: Watch real-time status for detection feedback
 
 ### Multi-Monitor Issues
 
-**Monitor not detected:**
-- Install screeninfo: Open Command Prompt and type `pip install screeninfo`
-- Restart the script
+**Monitor not showing in list:**
+- **Display Tab**: Check library status section
+- Install missing libraries if shown
+- Restart the application
 
 **Clicks in wrong location:**
-- **Most common cause:** Windows display scaling
-- **Solution:** Choose "Use recommended resolution" when prompted
-- **Alternative:** Use custom resolution with your monitor's actual size
+- **Display Tab**: Use "Recommended" resolution option
+- Check DPI scaling warnings in Display tab
+- Try different resolution options from dropdown
 
-**Cursor gets stuck:**
-- Enable `FORCE_CURSOR_TO_MONITOR = true` in settings
-- Try running game in windowed mode instead of fullscreen
-
-### Installation Problems
-
-**Python not found:**
-- Run `installer.bat` as Administrator
-- If it still fails, download Python from python.org
-
-**Permission errors:**
-- Right-click `installer.bat` and select "Run as administrator"
-- Check if antivirus is blocking the script
-
-**Script won't start:**
-- Make sure ALL files are in the same folder
-- Ensure `settings.ini` file exists
+**GUI Display Problems:**
+- **Settings Tab**: Disable "Force cursor to monitor" 
+- **Display Tab**: Switch to primary monitor
+- Try running in windowed mode instead of fullscreen
 
 ### Display Scaling Issues
 
-**Symptoms:** Clicks appear in wrong location, offset from button
-**Cause:** Windows is using display scaling (125%, 150%, etc.)
-**Solution:** 
-1. When setting up, choose "Use likely actual resolution" 
-2. Or use custom resolution with your monitor's real size
-3. Enable debug logging to see coordinate calculations
+**Symptoms:** Clicks appear offset from button location
+**GUI Solution:**
+1. **Display Tab**: Look for scaling warnings
+2. **Select recommended resolution** from dropdown
+3. **Control Tab**: Test detection and watch status messages
+4. **Log Tab**: Check for coordinate calculation details
 
 ---
 
 ## 🔍 Advanced Features
 
-### Debug Logging System
+### Integrated Debug System
 
-**What it does:** Creates detailed `log.txt` file showing exactly what the script is doing
+**Built-in Log Viewer:**
+- **Log Tab**: View debug information without opening external files
+- **Real-time updates**: See logs as they're generated
+- **Log management**: Clear or refresh log content
+- **No external file handling**: Everything in the GUI
 
-**When to use:**
-- Button detection isn't working
-- Clicks are in wrong location
-- Multi-monitor setup issues
+**How to use:**
+1. **Settings Tab**: Enable "Debug logging"
+2. **Control Tab**: Start detection
+3. **Log Tab**: Watch real-time debug information
+4. Use log data to troubleshoot detection issues
 
-**How to enable:**
-1. Open `settings.ini`
-2. Change `DEBUG_LOGGING = false` to `DEBUG_LOGGING = true`
-3. Save and restart script
-4. Check `log.txt` file for detailed information
-
-### Project File Structure
+### GUI Project Structure
 ```
 limbus_auto_player/
-├── LAP.py          # Main file - double-click this to start
-├── settings.ini        # Edit this to change settings
-├── installer.bat       # Run this first to install everything
-├── README.md           # This help file
-└── lib/                # Supporting files (don't modify these)
-   ├── config.py
-   ├── monitor.py
-   ├── mouse.py
-   ├── screenshot.py
-   ├── detection.py
-   ├── logger.py
-   ├── utils.py
-   ├── scaling_utils.py
-   └── library_checker.py
+├── LAP.pyw                           # Main GUI application - double-click to start
+├── settings.ini                     # Configuration file (auto-created)
+├── installer.bat                    # Initial setup installer
+├── README.md                        # This help file
+├── gui/                             # GUI package
+│   ├── __init__.py                  # GUI package initialization
+│   ├── main_window.py               # Main window and application logic
+│   ├── settings_manager.py          # Settings loading/saving logic
+│   ├── hotkey_manager.py            # Global hotkey functionality
+│   ├── detection_worker.py          # Detection thread worker
+│   └── tabs/                        # Tab implementations
+│       ├── __init__.py              # Tabs package initialization
+│       ├── control_tab.py           # Main control interface
+│       ├── settings_tab.py          # Settings configuration
+│       ├── display_tab.py           # Monitor/resolution settings
+│       └── status_tab.py            # Debug log viewer
+└── lib/                             # Core functionality (don't modify)
+    ├── config.py
+    ├── monitor.py
+    ├── mouse.py
+    ├── screenshot.py
+    ├── detection.py
+    ├── logger.py
+    ├── utils.py
+    └── library_checker.py
 ```
 
-### How Detection Works
-The script looks for specific colors on your screen:
-- **Main color:** Dark red `#3B0100` (the button background)
-- **Accent color:** Orange/gold `#F6AF64` (button highlights)
-- **Search area:** Scans horizontally at 74.17% from the top of screen
-- **Direction:** Searches right to left for faster detection
+### GUI Features
 
-### Custom Resolution Format
-When entering custom resolution, use format: `WIDTHxHEIGHT`
-- **Examples:** `1920x1080`, `2560x1440`, `3840x2160`
-- **Don't use spaces or other characters**
+**Modern Interface:**
+- **Tabbed design** for organized functionality
+- **Real-time status updates** in Control tab
+- **Live configuration display** showing current settings
+- **Visual feedback** for all operations
+
+**Smart Defaults:**
+- **Auto-detects** optimal monitor and resolution
+- **Suggests corrections** for common scaling issues
+- **Preserves settings** between sessions
+- **Validates input** to prevent errors
+
+**Advanced Controls:**
+- **Global hotkey support** ('P' key works anywhere)
+- **Thread-safe operation** with proper cleanup
+- **Error handling** with user-friendly messages
+- **Library checking** with installation guidance
+
+### How Detection Works
+The GUI shows this information in real-time:
+- **Search area**: Horizontal scan at 74.17% from top of screen
+- **Color matching**: RGB values with tolerance settings
+- **Coordinate calculation**: Accounts for monitor offset and scaling
+- **Success/failure feedback**: Immediate status updates
+
+### GUI vs Command Line
+The GUI provides all command-line functionality plus:
+- **Visual configuration** instead of text prompts
+- **Real-time monitoring** of detection status
+- **Integrated debug viewing** without external files
+- **Settings validation** with immediate feedback
+- **Multi-monitor management** with visual selection
 
 ---
 
@@ -286,16 +401,19 @@ When entering custom resolution, use format: `WIDTHxHEIGHT`
 
 ### Safety & Terms of Service
 - **Personal use only** - don't distribute or commercialize
-- **Monitor the script** - don't leave it running unattended for hours
+- **Monitor the script** using the GUI status display
 - **Game updates** may require script updates if UI changes
 - **Be aware of the risks** before using automation tools
 
-### Performance Tips
+### GUI Performance Tips
+- **Keep GUI open** while detection runs for best monitoring
+- **Use Log tab** for detailed troubleshooting
 - **Single monitor setup** is more reliable than multi-monitor
+- **Save settings** regularly using the GUI button
 
 ### Technical Limitations
 - **Windows only** - doesn't work on Mac or Linux
-- **GUI-based detection** - if button appearance changes, script needs updates
+- **GUI-based detection** - if button appearance changes, use Settings tab to adjust colors
 - **No game modification** - only automates mouse clicks and keyboard input
 - **No unfair advantage** - just automates repetitive clicking
 
@@ -303,17 +421,25 @@ When entering custom resolution, use format: `WIDTHxHEIGHT`
 
 ## 🆘 Need More Help?
 
+### Using the GUI for Troubleshooting:
+1. ✅ **Settings Tab**: Enable debug logging
+2. ✅ **Control Tab**: Watch real-time status messages
+3. ✅ **Log Tab**: View detailed debug information
+4. ✅ **Display Tab**: Verify monitor and resolution settings
+5. ✅ **Settings Tab**: Adjust detection parameters as needed
+
 ### Before Asking for Help:
-1. ✅ Try the troubleshooting steps above
-2. ✅ Enable debug logging and check `log.txt`
-3. ✅ Make sure all files are in the same folder
-4. ✅ Verify your settings.ini file is correct
+1. ✅ Use the built-in Log tab to view debug information
+2. ✅ Try different settings using the Settings tab
+3. ✅ Check Display tab for scaling recommendations
+4. ✅ Ensure all files are in the same folder
 
 ### When Reporting Issues:
 - **Include your Windows version** and screen resolution
-- **Attach your log.txt file** (if debug logging is enabled)
+- **Use Log tab** to copy relevant debug information
+- **Screenshot the GUI** showing your settings
 - **Describe exactly what happens** vs what you expected
-- **List any error messages** you see
+- **List any error messages** shown in the GUI
 
 ---
 

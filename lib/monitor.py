@@ -1,6 +1,5 @@
 import pyautogui
 from .library_checker import is_available
-from .scaling_utils import detect_likely_scaling, set_scaling_factor
 
 # Import screeninfo if available
 if is_available('screeninfo'):
@@ -69,18 +68,9 @@ def get_monitor_resolution(monitor):
     print(f"Detected resolution: {monitor['width']}x{monitor['height']}")
     
     # Check for likely DPI scaling
-    likely_actual, scaling_factor, desc = detect_likely_scaling(monitor['width'], monitor['height'])
     
-    if likely_actual:
-        print(f"⚠️  This looks like {desc}")
-        print(f"   Your actual monitor resolution is probably: {likely_actual[0]}x{likely_actual[1]}")
-    
-    print("\nOptions:")
-    print("1. Use detected resolution (may be incorrect due to DPI scaling)")
     
     options = ["1920×1080 (Full HD)", "2560×1440 (QHD)", "3840×2160 (4K UHD)", "Custom resolution"]
-    if likely_actual:
-        options.insert(0, f"{likely_actual[0]}×{likely_actual[1]} (RECOMMENDED)")
     
     for i, option in enumerate(options):
         print(f"{i + 2}. {option}")
@@ -93,19 +83,15 @@ def get_monitor_resolution(monitor):
             choice_num = int(choice)
             
             if choice_num == 1:
-                set_scaling_factor(1.0)
                 return monitor['width'], monitor['height']
-            elif choice_num == 2 and likely_actual:
-                set_scaling_factor(scaling_factor)
-                return likely_actual[0], likely_actual[1]
             elif choice_num == 2:
                 return 1920, 1080
             elif choice_num == 3:
-                return 2560, 1440 if not likely_actual else (1920, 1080)
+                return 2560, 1440
             elif choice_num == 4:
-                return 3840, 2160 if not likely_actual else (2560, 1440)
+                return 3840, 2160
             elif choice_num == 5:
-                return 3840, 2160 if likely_actual else get_custom_resolution()
+                return get_custom_resolution()
             elif choice_num == max_option:
                 return get_custom_resolution()
             else:

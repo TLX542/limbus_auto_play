@@ -1,5 +1,4 @@
 from .logger import debug_log
-from .scaling_utils import apply_scaling
 
 def color_match(c1, c2, tol):
     """Check if two colors match within tolerance"""
@@ -39,40 +38,9 @@ def check_secondary_color(screenshot, center_x, center_y, secondary_color, toler
     debug_log("Secondary color not found in search area")
     return False
 
-def calculate_click_coordinates(x, check_row_relative, monitor_offset_x, monitor_offset_y, used_mss):
-    """Calculate click coordinates based on screenshot method and scaling"""
-    if used_mss:
-        # MSS: screenshot is cropped to the specific monitor
-        # Apply scaling and add monitor offset for absolute coordinates
-        scaled_x, scaled_y = apply_scaling(x, check_row_relative)
-        click_x = scaled_x + monitor_offset_x
-        click_y = scaled_y + monitor_offset_y
-        screenshot_x = x  # For secondary color check
-        screenshot_y = check_row_relative
-    else:
-        # pyautogui: screenshot is the entire desktop
-        # Coordinates are already absolute
-        abs_x = x + monitor_offset_x
-        abs_y = check_row_relative + monitor_offset_y
-        click_x = abs_x
-        click_y = abs_y
-        screenshot_x = abs_x  # For secondary color check
-        screenshot_y = abs_y
-    
-    return click_x, click_y, screenshot_x, screenshot_y
-
-def detect_button(screenshot, used_mss, detection_settings, monitor_settings):
+def detect_button(screenshot, used_mss, detection_settings, monitor_settings, resolution_info=None):
     """
-    Main button detection function
-    
-    Args:
-        screenshot: PIL Image object
-        used_mss: Boolean indicating if MSS was used for screenshot
-        detection_settings: Dict with detection parameters
-        monitor_settings: Dict with monitor parameters
-    
-    Returns:
-        Tuple: (found, click_x, click_y) where found is boolean and coordinates are for clicking
+    Main button detection function with simplified coordinate logic
     """
     # Extract settings
     x_start_relative = detection_settings['x_start_relative']
@@ -86,45 +54,114 @@ def detect_button(screenshot, used_mss, detection_settings, monitor_settings):
     monitor_offset_x = monitor_settings['monitor_offset_x']
     monitor_offset_y = monitor_settings['monitor_offset_y']
     
+    # Get resolution info
+    if resolution_info:
+        monitor_width = resolution_info.get('monitor_width', 0)
+        monitor_height = resolution_info.get('monitor_height', 0)
+        screen_width = resolution_info.get('screen_width', 0)
+        screen_height = resolution_info.get('screen_height', 0)
+    else:
+        monitor_width = screen_width = screenshot.size[0]
+        monitor_height = screen_height = screenshot.size[1]
+    
+    debug_log(f"=== DETECTION START ===")
+    debug_log(f"Screenshot size: {screenshot.size[0]}x{screenshot.size[1]}")
+    debug_log(f"Monitor: {monitor_width}x{monitor_height} at offset ({monitor_offset_x}, {monitor_offset_y})")
+    debug_log(f"Screen resolution: {screen_width}x{screen_height}")
+    debug_log(f"Search range: X{x_start_relative}-{x_end_relative}, Y{check_row_relative}")
+    debug_log(f"Screenshot method: {'MSS (cropped)' if used_mss else 'PyAutoGUI (full desktop)'}")
+    
+    # Determine if we need to apply scaling
+    needs_scaling = (monitor_width != screen_width or monitor_height != screen_height)
+    if needs_scaling:
+        scale_x = monitor_width / screen_width
+        scale_y = monitor_height / screen_height
+        debug_log(f"Scaling needed: scale_x={scale_x}, scale_y={scale_y}")
+    else:
+        scale_x = scale_y = 1.0
+        debug_log("No scaling needed - monitor matches screen resolution")
+    
     # Scan from right to left
     for x in range(x_end_relative - 1, x_start_relative - 1, -1):
         try:
             # Get pixel color based on screenshot method
             if used_mss:
+                # MSS: coordinates are within the cropped screenshot
+                if x >= screenshot.size[0] or check_row_relative >= screenshot.size[1]:
+                    continue
                 pixel_color = screenshot.getpixel((x, check_row_relative))
+                pixel_location_desc = f"MSS screenshot coords ({x}, {check_row_relative})"
             else:
+                # pyautogui: need absolute coordinates for full desktop screenshot
                 abs_x = x + monitor_offset_x
                 abs_y = check_row_relative + monitor_offset_y
+                if abs_x >= screenshot.size[0] or abs_y >= screenshot.size[1] or abs_x < 0 or abs_y < 0:
+                    continue
                 pixel_color = screenshot.getpixel((abs_x, abs_y))
+                pixel_location_desc = f"PyAutoGUI desktop coords ({abs_x}, {abs_y})"
             
             # Check if target color matches
             if color_match(pixel_color, target_color, tolerance):
-                debug_log(f"Found target color at relative X{x}, Y{check_row_relative}: {pixel_color}")
+                debug_log(f"Found target color at {pixel_location_desc}: {pixel_color}")
                 
-                # Calculate coordinates for secondary color check
-                click_x, click_y, screenshot_x, screenshot_y = calculate_click_coordinates(
-                    x, check_row_relative, monitor_offset_x, monitor_offset_y, used_mss
-                )
+                # Calculate click coordinates
+                if used_mss:
+                    # MSS: apply scaling to screenshot coordinates, then add monitor offset
+                    if needs_scaling:
+                        scaled_x = x * scale_x
+                        scaled_y = check_row_relative * scale_y
+                        click_x = int(scaled_x) + monitor_offset_x
+                        click_y = int(scaled_y) + monitor_offset_y
+                        debug_log(f"MSS with scaling: ({x}, {check_row_relative}) -> scaled({scaled_x}, {scaled_y}) -> final({click_x}, {click_y})")
+                    else:
+                        click_x = x + monitor_offset_x
+                        click_y = check_row_relative + monitor_offset_y
+                        debug_log(f"MSS no scaling: ({x}, {check_row_relative}) -> final({click_x}, {click_y})")
+                    
+                    # Secondary color check uses screenshot coordinates
+                    screenshot_x = x
+                    screenshot_y = check_row_relative
+                    
+                else:
+                    # pyautogui: apply scaling to relative coordinates, then add monitor offset
+                    if needs_scaling:
+                        scaled_x = x * scale_x
+                        scaled_y = check_row_relative * scale_y
+                        click_x = int(scaled_x) + monitor_offset_x
+                        click_y = int(scaled_y) + monitor_offset_y
+                        debug_log(f"PyAutoGUI with scaling: relative({x}, {check_row_relative}) -> scaled({scaled_x}, {scaled_y}) -> final({click_x}, {click_y})")
+                    else:
+                        click_x = x + monitor_offset_x
+                        click_y = check_row_relative + monitor_offset_y
+                        debug_log(f"PyAutoGUI no scaling: relative({x}, {check_row_relative}) -> final({click_x}, {click_y})")
+                    
+                    # Secondary color check uses absolute coordinates in full desktop screenshot
+                    screenshot_x = x + monitor_offset_x
+                    screenshot_y = check_row_relative + monitor_offset_y
                 
-                # Check for secondary color using appropriate coordinates
+                # Validate click coordinates
+                debug_log(f"Click coordinates validation:")
+                debug_log(f"  - Target monitor bounds: X{monitor_offset_x}-{monitor_offset_x + monitor_width}, Y{monitor_offset_y}-{monitor_offset_y + monitor_height}")
+                debug_log(f"  - Click coordinates: ({click_x}, {click_y})")
+                debug_log(f"  - Within monitor bounds: X={monitor_offset_x <= click_x <= monitor_offset_x + monitor_width}, Y={monitor_offset_y <= click_y <= monitor_offset_y + monitor_height}")
+                
+                # Check for secondary color
                 secondary_found = check_secondary_color(
                     screenshot, screenshot_x, screenshot_y, secondary_color, 
                     tolerance, search_area_size, used_mss
                 )
                 
                 if secondary_found:
-                    debug_log("Secondary color confirmed! Button detected.")
-                    debug_log(f"Click coordinates: ({click_x}, {click_y})")
-                    debug_log(f"Monitor offset: ({monitor_offset_x}, {monitor_offset_y})")
-                    debug_log(f"Relative coordinates: ({x}, {check_row_relative})")
-                    debug_log(f"Used MSS: {used_mss}")
-                    
+                    debug_log("✅ Secondary color confirmed! Button detected.")
+                    debug_log(f"🎯 FINAL CLICK COORDINATES: ({click_x}, {click_y})")
                     return True, click_x, click_y
                 else:
-                    debug_log("Target color found but secondary color not detected")
-        except (IndexError, OSError):
-            # Skip pixels that are out of bounds
+                    debug_log("❌ Target color found but secondary color not detected")
+                    
+        except (IndexError, OSError) as e:
+            debug_log(f"Pixel access error: {e}")
             continue
     
     # No button found
+    debug_log("❌ No button found in scan")
     return False, 0, 0

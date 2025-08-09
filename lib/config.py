@@ -1,11 +1,8 @@
-import configparser
 import os
-import sys
-
 
 def load_settings():
-    """Load settings from settings.ini file in parent directory"""
-    config = configparser.ConfigParser()
+    """Safely load settings without allowing sys.exit() to terminate the GUI"""
+    import configparser
     
     # Get the directory where the script is located
     script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -15,13 +12,10 @@ def load_settings():
     
     # Check if settings.ini exists
     if not os.path.exists(settings_file):
-        print(f"Error: settings.ini not found!")
-        print(f"Looking for: {settings_file}")
-        print("Please ensure settings.ini is in the parent directory of this script.")
-        input("Press Enter to exit...")
-        sys.exit(1)
+        raise Exception(f"settings.ini not found at: {settings_file}")
     
     try:
+        config = configparser.ConfigParser()
         config.read(settings_file)
         
         # Load debug setting first
@@ -46,8 +40,8 @@ def load_settings():
         search_area_size = config.getint('DETECTION', 'SEARCH_AREA_SIZE', fallback=50)
         
         # Load timing settings
-        check_interval = config.getint('TIMING', 'CHECK_INTERVAL', fallback=2)
-        
+        check_interval = config.getfloat('TIMING', 'CHECK_INTERVAL', fallback=2.0)
+
         # Load behavior settings
         alt_tab_after_click = config.getboolean('BEHAVIOR', 'ALT_TAB_AFTER_CLICK', fallback=False)
         reset_cursor_position = config.getboolean('BEHAVIOR', 'RESET_CURSOR_POSITION', fallback=True)
@@ -70,7 +64,4 @@ def load_settings():
         }
         
     except Exception as e:
-        print(f"Error reading settings.ini: {e}")
-        print("Please check your settings.ini file for errors.")
-        input("Press Enter to exit...")
-        sys.exit(1)
+        raise Exception(f"Error reading settings.ini: {e}")
