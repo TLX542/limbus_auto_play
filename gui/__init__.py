@@ -1,7 +1,7 @@
 """
 GUI Package
 
-Contains all GUI components for the Limbus Company Auto Player.
+Contains all GUI components for the Limbus Auto Player.
 """
 
 from .main_window import LimbusAutoPlayerGUI

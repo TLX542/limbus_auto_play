@@ -38,7 +38,7 @@ def display_configuration(settings, selected_monitor, screen_width, screen_heigh
     """
     
     info_lines = [
-        "====== Limbus Company Auto Player ======",
+        "====== Limbus Auto Player ======",
         "Settings loaded from settings.ini",
         f"Selected monitor: {selected_monitor['name']}",
         f"Monitor resolution: {screen_width}x{screen_height}",

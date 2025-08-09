@@ -1,5 +1,5 @@
 """
-Limbus Company Auto Player - Status Tab
+Limbus Auto Player - Status Tab
 
 Interface for viewing debug logs and application status.
 """

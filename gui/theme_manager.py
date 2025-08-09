@@ -1,5 +1,5 @@
 """
-Limbus Company Auto Player - Theme Manager
+Limbus Auto Player - Theme Manager
 
 Handles dark/light mode theming for the application.
 """

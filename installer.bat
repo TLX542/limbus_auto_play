@@ -1,5 +1,5 @@
 @echo off
-echo ====== Limbus Company Auto Player Installer ======
+echo ====== Limbus Auto Player Installer ======
 echo.
 
 echo Checking if Python is installed...

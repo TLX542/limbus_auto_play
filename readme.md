@@ -1,4 +1,4 @@
-# Limbus Company Auto Player
+# Limbus Auto Player
 
 > **⚠️ Important:** Use at your own risk. This automation tool may violate the game's Terms of Service. Designed for personal use and convenience only.
 

@@ -1,5 +1,5 @@
 """
-Limbus Company Auto Player - Hotkey Manager
+Limbus Auto Player - Hotkey Manager
 
 Handles global hotkey functionality for pause/resume.
 """

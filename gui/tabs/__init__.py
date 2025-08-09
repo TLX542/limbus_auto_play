@@ -1,7 +1,7 @@
 """
 GUI Tabs Package
 
-Contains all tab implementations for the Limbus Company Auto Player GUI.
+Contains all tab implementations for the Limbus Auto Player GUI.
 """
 
 from .control_tab import ControlTab

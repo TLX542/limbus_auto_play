@@ -1,5 +1,5 @@
 """
-Limbus Company Auto Player - Control Tab
+Limbus Auto Player - Control Tab
 
 Main control interface for starting/stopping detection and viewing status.
 """

@@ -1,5 +1,5 @@
 """
-Limbus Company Auto Player - Settings Manager
+Limbus Auto Player - Settings Manager
 
 Handles loading and saving of GUI and application settings.
 """

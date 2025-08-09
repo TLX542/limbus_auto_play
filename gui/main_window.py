@@ -1,5 +1,5 @@
 """
-Limbus Company Auto Player - Main Window
+Limbus Auto Player - Main Window
 
 Main GUI window class that manages the overall application interface.
 """
@@ -31,7 +31,7 @@ from .detection_worker import DetectionWorker
 class LimbusAutoPlayerGUI:
     def __init__(self, root):
         self.root = root
-        self.root.title("Limbus Company Auto Player")
+        self.root.title("Limbus Auto Player")
         self.root.geometry("700x600")
         self.root.resizable(True, True)
         
@@ -178,7 +178,7 @@ class LimbusAutoPlayerGUI:
         main_frame.pack(fill='both', expand=True, padx=10, pady=10)
         
         # Title
-        title_label = ttk.Label(main_frame, text="Limbus Company Auto Player", 
+        title_label = ttk.Label(main_frame, text="Limbus Auto Player", 
                                font=('Arial', 16, 'bold'))
         title_label.pack(pady=(0, 20))
         

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Limbus Company Auto Player - Main Entry Point
+Limbus Auto Player - Main Entry Point
 
 Entry point for the Limbus Company automation GUI application.
 """

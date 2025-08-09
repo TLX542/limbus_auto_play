@@ -1,5 +1,5 @@
 """
-Limbus Company Auto Player - Detection Worker
+Limbus Auto Player - Detection Worker
 
 Handles the main detection loop in a separate thread.
 """

@@ -1,5 +1,5 @@
 """
-Limbus Company Auto Player - Settings Tab
+Limbus Auto Player - Settings Tab
 
 Interface for configuring detection and behavior settings.
 """

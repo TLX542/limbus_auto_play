@@ -1,5 +1,5 @@
 """
-Limbus Company Auto Player - Display Tab
+Limbus Auto Player - Display Tab
 
 Interface for monitor and resolution configuration.
 """
