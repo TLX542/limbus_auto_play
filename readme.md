@@ -399,10 +399,10 @@ Changes made in the GUI:
 3. **Log Tab**: Watch real-time debug information
 4. Use log data to troubleshoot detection issues
 
-### GUI Project Structure
+### Project Structure
 ```
 limbus_auto_player/
-├── LAP.pyw                           # Main GUI application - double-click to start
+├── LAP.pyw                          # Main GUI application - double-click to start
 ├── settings.ini                     # Configuration file (auto-created)
 ├── installer.bat                    # Initial setup installer
 ├── README.md                        # This help file
