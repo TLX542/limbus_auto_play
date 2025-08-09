@@ -43,8 +43,12 @@ class ControlTab:
         hotkey_frame = ttk.Frame(button_frame)
         hotkey_frame.pack(fill='x', pady=(10, 0))
         
-        ttk.Label(hotkey_frame, text="💡 Press 'P' anywhere to pause/resume detection", 
-                 foreground='blue', font=('Arial', 9)).pack(anchor='w')
+        self.hotkey_label = ttk.Label(hotkey_frame, text="💡 Press 'P' anywhere to pause/resume detection", 
+                                     font=('Arial', 9))
+        self.hotkey_label.pack(anchor='w')
+        
+        # Apply initial theme colors
+        self.update_hotkey_colors()
         
         # Current settings display
         current_frame = ttk.LabelFrame(self.frame, text="Current Configuration", padding=10)
@@ -71,6 +75,7 @@ class ControlTab:
         config_text = f"""Status: {status_text}
 Monitor: {self.app.selected_monitor['name'] if self.app.selected_monitor else 'None'}
 Resolution: {self.app.screen_width}x{self.app.screen_height}
+Theme: {'Dark' if self.app.dark_mode_var.get() else 'Light'} Mode
 Check Interval: {self.app.check_interval_var.get()}s
 Tolerance: {self.app.tolerance_var.get()}
 Target Color: RGB{target_color}
@@ -97,6 +102,13 @@ Debug Logging: {'Yes' if self.app.debug_logging_var.get() else 'No'}"""
             self.toggle_button.config(text="Resume Detection")
         else:
             self.toggle_button.config(text="Stop Detection")
+    
+    def update_hotkey_colors(self):
+        """Update hotkey info color based on current theme"""
+        if hasattr(self.app, 'theme_manager'):
+            is_dark = self.app.dark_mode_var.get()
+            info_color = self.app.theme_manager.get_text_color_for_type('info', is_dark)
+            self.hotkey_label.configure(foreground=info_color)
     
     def add_status_message(self, message):
         """Add a status message to the status display"""

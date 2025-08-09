@@ -47,6 +47,11 @@ def load_settings():
         reset_cursor_position = config.getboolean('BEHAVIOR', 'RESET_CURSOR_POSITION', fallback=True)
         force_cursor_to_monitor = config.getboolean('BEHAVIOR', 'FORCE_CURSOR_TO_MONITOR', fallback=True)
         
+        # Load GUI settings (with defaults)
+        selected_monitor = config.get('GUI', 'SELECTED_MONITOR', fallback='Monitor 1')
+        resolution = config.get('GUI', 'RESOLUTION', fallback='1920x1080')
+        dark_mode = config.getboolean('GUI', 'DARK_MODE', fallback=False)  # Default to light mode
+        
         return {
             'script_dir': script_dir,
             'debug_logging': debug_logging,
@@ -60,7 +65,10 @@ def load_settings():
             'check_interval': check_interval,
             'alt_tab_after_click': alt_tab_after_click,
             'reset_cursor_position': reset_cursor_position,
-            'force_cursor_to_monitor': force_cursor_to_monitor
+            'force_cursor_to_monitor': force_cursor_to_monitor,
+            'selected_monitor': selected_monitor,
+            'resolution': resolution,
+            'dark_mode': dark_mode
         }
         
     except Exception as e:

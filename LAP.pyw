@@ -12,15 +12,15 @@ def main():
     """Main function to run the GUI"""
     root = tk.Tk()
     
-    # Set up theme
+    # Set up initial theme (will be overridden by theme manager)
     style = ttk.Style()
     
-    # Try to use a modern theme
+    # Try to use a modern theme as base
     available_themes = style.theme_names()
-    if 'vista' in available_themes:
-        style.theme_use('vista')
-    elif 'clam' in available_themes:
+    if 'clam' in available_themes:
         style.theme_use('clam')
+    elif 'vista' in available_themes:
+        style.theme_use('vista')
     
     # Create and configure the application
     app = LimbusAutoPlayerGUI(root)

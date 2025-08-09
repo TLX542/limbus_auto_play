@@ -124,6 +124,9 @@ SELECTED_MONITOR = Monitor 1
 
 # Resolution setting for GUI
 RESOLUTION = 1920x1080
+
+# Set to true to enable dark mode (default is false for light mode)
+DARK_MODE = false
 """
         try:
             with open(self.file_path, 'w', encoding='utf-8') as f:
@@ -186,6 +189,7 @@ RESOLUTION = 1920x1080
         section_found = False
         insert_index = len(self.lines)
         
+        # First, check if the section exists
         for i, line in enumerate(self.lines):
             stripped = line.strip()
             
@@ -202,8 +206,10 @@ RESOLUTION = 1920x1080
                 break
         
         if not section_found:
-            # Add the section header and key
-            self.lines.extend([f"\n[{section}]\n"])
+            # Add the section header first
+            if self.lines and not self.lines[-1].endswith('\n'):
+                self.lines.append('\n')
+            self.lines.append(f"\n[{section}]\n")
             insert_index = len(self.lines)
         
         # Add the new key-value pair
@@ -211,6 +217,12 @@ RESOLUTION = 1920x1080
             str_value = str(value).lower()
         else:
             str_value = str(value)
+        
+        # Add appropriate comment for dark mode
+        if key == 'DARK_MODE':
+            comment_line = "# Set to true to enable dark mode (default is false for light mode)\n"
+            self.lines.insert(insert_index, comment_line)
+            insert_index += 1
         
         self.lines.insert(insert_index, f"{key} = {str_value}\n")
     
@@ -260,6 +272,7 @@ def load_settings_with_comments():
         'debug_logging': settings_handler.get('DEBUG', 'DEBUG_LOGGING', False),
         'selected_monitor': settings_handler.get('GUI', 'SELECTED_MONITOR', 'Monitor 1'),
         'resolution': settings_handler.get('GUI', 'RESOLUTION', '1920x1080'),
+        'dark_mode': settings_handler.get('GUI', 'DARK_MODE', False),  # Default to light mode
         '_handler': settings_handler  # Keep reference to the handler
     }
     
@@ -303,6 +316,7 @@ def save_all_settings_with_comments(gui_instance, show_message=True):
         if gui_instance.selected_monitor:
             handler.set('GUI', 'SELECTED_MONITOR', gui_instance.selected_monitor['name'])
         handler.set('GUI', 'RESOLUTION', gui_instance.resolution_var.get())
+        handler.set('GUI', 'DARK_MODE', gui_instance.dark_mode_var.get())
         
         # Save to file
         handler.save()

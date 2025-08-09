@@ -21,6 +21,7 @@ from lib.monitor import get_monitor_info
 
 from .settings_manager import SettingsManager
 from .hotkey_manager import HotkeyManager
+from .theme_manager import ThemeManager
 from .tabs.control_tab import ControlTab
 from .tabs.settings_tab import SettingsTab
 from .tabs.display_tab import DisplayTab
@@ -36,6 +37,7 @@ class LimbusAutoPlayerGUI:
         
         # Initialize managers
         self.settings_manager = SettingsManager()
+        self.theme_manager = ThemeManager(self)
         self.hotkey_manager = HotkeyManager(self)
         self.detection_worker = DetectionWorker(self)
         
@@ -67,6 +69,7 @@ class LimbusAutoPlayerGUI:
         try:
             if self.settings_loaded_successfully:
                 self.create_widgets()
+                self.apply_initial_theme()
                 self.update_status_display()
                 self.root.after(100, self.debug_display_elements)
             else:
@@ -80,6 +83,7 @@ class LimbusAutoPlayerGUI:
         self.reset_cursor_var = tk.BooleanVar()
         self.force_cursor_var = tk.BooleanVar()
         self.debug_logging_var = tk.BooleanVar()
+        self.dark_mode_var = tk.BooleanVar()
         self.check_interval_var = tk.DoubleVar(value=1.0)
         self.tolerance_var = tk.IntVar(value=10)
         self.selected_monitor_var = tk.StringVar()
@@ -115,6 +119,7 @@ class LimbusAutoPlayerGUI:
             self.reset_cursor_var.set(self.settings.get('reset_cursor_position', True))
             self.force_cursor_var.set(self.settings.get('force_cursor_to_monitor', False))
             self.debug_logging_var.set(self.settings.get('debug_logging', False))
+            self.dark_mode_var.set(self.settings.get('dark_mode', False))
             self.check_interval_var.set(self.settings.get('check_interval', 1.0))
             self.tolerance_var.set(self.settings.get('tolerance', 10))
             
@@ -142,6 +147,29 @@ class LimbusAutoPlayerGUI:
             # Set fallback values
             script_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
             self.gui_settings_file = os.path.join(script_dir, 'settings.ini')
+    
+    def apply_initial_theme(self):
+        """Apply the initial theme based on settings"""
+        self.theme_manager.apply_theme(self.dark_mode_var.get())
+    
+    def toggle_dark_mode(self):
+        """Toggle between dark and light mode"""
+        is_dark = self.dark_mode_var.get()
+        self.theme_manager.apply_theme(is_dark)
+        
+        # Update theme-specific colors in all tabs
+        if hasattr(self, 'control_tab'):
+            self.control_tab.update_hotkey_colors()
+        
+        if hasattr(self, 'display_tab'):
+            self.display_tab.update_info_colors()
+            self.display_tab.update_library_colors()
+        
+        # Save the theme preference
+        self.save_all_settings(show_message=False)
+        
+        # Update config display
+        self.update_config_display()
     
     def create_widgets(self):
         """Create all GUI widgets"""

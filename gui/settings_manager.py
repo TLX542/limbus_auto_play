@@ -19,6 +19,7 @@ class SettingsManager:
         # Default values
         default_monitor = None
         default_resolution = "1920x1080"
+        default_dark_mode = False  # Default to light mode
         
         # Try to get monitor info, with fallback if it fails
         try:
@@ -42,6 +43,10 @@ class SettingsManager:
                 if config.has_section('GUI'):
                     saved_monitor_name = config.get('GUI', 'SELECTED_MONITOR', fallback='')
                     saved_resolution = config.get('GUI', 'RESOLUTION', fallback=default_resolution)
+                    saved_dark_mode = config.getboolean('GUI', 'DARK_MODE', fallback=default_dark_mode)
+                    
+                    # Set dark mode preference
+                    app.dark_mode_var.set(saved_dark_mode)
                     
                     # Try to find the saved monitor
                     for monitor in app.monitors:
@@ -51,9 +56,19 @@ class SettingsManager:
                     
                     if default_monitor:
                         default_resolution = saved_resolution
+                else:
+                    # GUI section doesn't exist, use defaults and create it
+                    app.dark_mode_var.set(default_dark_mode)
+                    self._create_gui_section_if_missing(app.gui_settings_file)
                 
             except Exception as e:
                 print(f"Warning: Could not load GUI settings: {e}")
+                # Set to default values
+                app.dark_mode_var.set(default_dark_mode)
+                self._create_gui_section_if_missing(app.gui_settings_file)
+        else:
+            # Settings file doesn't exist, set defaults
+            app.dark_mode_var.set(default_dark_mode)
         
         # If no saved monitor or monitor not found, use primary
         if not default_monitor:
@@ -81,6 +96,31 @@ class SettingsManager:
             app.screen_width = default_monitor['width']
             app.screen_height = default_monitor['height']
     
+    def _create_gui_section_if_missing(self, settings_file):
+        """Create GUI section with default values if it doesn't exist"""
+        try:
+            config = configparser.ConfigParser(interpolation=None)
+            
+            # Read existing file if it exists
+            if os.path.exists(settings_file):
+                config.read(settings_file)
+            
+            # Add GUI section if it doesn't exist
+            if not config.has_section('GUI'):
+                config.add_section('GUI')
+                config.set('GUI', 'SELECTED_MONITOR', 'Monitor 1')
+                config.set('GUI', 'RESOLUTION', '1920x1080')
+                config.set('GUI', 'DARK_MODE', 'false')
+                
+                # Save the updated file
+                with open(settings_file, 'w') as f:
+                    config.write(f)
+                    
+                print("Created GUI section in settings.ini with default values")
+                
+        except Exception as e:
+            print(f"Warning: Could not create GUI section: {e}")
+    
     def save_gui_settings(self, app):
         """Save GUI-specific settings to the main settings.ini file"""
         config = configparser.ConfigParser(interpolation=None)
@@ -101,6 +141,7 @@ class SettingsManager:
             config.set('GUI', 'SELECTED_MONITOR', app.selected_monitor['name'])
         
         config.set('GUI', 'RESOLUTION', app.resolution_var.get())
+        config.set('GUI', 'DARK_MODE', str(app.dark_mode_var.get()).lower())
         
         try:
             with open(app.gui_settings_file, 'w') as f:
@@ -163,6 +204,7 @@ class SettingsManager:
         if app.selected_monitor:
             config.set('GUI', 'SELECTED_MONITOR', app.selected_monitor['name'])
         config.set('GUI', 'RESOLUTION', app.resolution_var.get())
+        config.set('GUI', 'DARK_MODE', str(app.dark_mode_var.get()).lower())
         
         try:
             with open(app.gui_settings_file, 'w') as f:

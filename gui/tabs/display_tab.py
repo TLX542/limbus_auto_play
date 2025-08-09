@@ -75,13 +75,34 @@ class DisplayTab:
         scaling_info_frame = ttk.Frame(self.resolution_frame)
         scaling_info_frame.pack(fill='x', pady=(10, 0))
         
-        ttk.Label(scaling_info_frame, text="ℹ️ Windows DPI scaling can affect detection accuracy", 
-                 foreground='blue').pack(anchor='w')
-        ttk.Label(scaling_info_frame, text="Ensure the resolution matches your monitor's native resolution", 
-                 foreground='black').pack(anchor='w')
-        ttk.Label(scaling_info_frame, text="If detection fails, ensure the resolution matches your monitor", 
-                 foreground='gray').pack(anchor='w')
-
+        self.info_label = ttk.Label(scaling_info_frame, text="ℹ️ Windows DPI scaling can affect detection accuracy")
+        self.info_label.pack(anchor='w')
+        
+        self.normal_label = ttk.Label(scaling_info_frame, text="Ensure the resolution matches your monitor's native resolution")
+        self.normal_label.pack(anchor='w')
+        
+        self.gray_label = ttk.Label(scaling_info_frame, text="If detection fails, ensure the resolution matches your monitor")
+        self.gray_label.pack(anchor='w')
+        
+        # Apply initial theme colors
+        self.update_info_colors()
+    
+    def update_info_colors(self):
+        """Update info text colors based on current theme"""
+        if hasattr(self.app, 'theme_manager'):
+            is_dark = self.app.dark_mode_var.get()
+            
+            # Update info text color
+            info_color = self.app.theme_manager.get_text_color_for_type('info', is_dark)
+            self.info_label.configure(foreground=info_color)
+            
+            # Update normal text color
+            normal_color = self.app.theme_manager.get_text_color_for_type('normal', is_dark)
+            self.normal_label.configure(foreground=normal_color)
+            
+            # Update gray text color
+            disabled_color = self.app.theme_manager.get_text_color_for_type('disabled', is_dark)
+            self.gray_label.configure(foreground=disabled_color)
     
     def create_library_status(self):
         """Create library status display"""
@@ -94,14 +115,42 @@ class DisplayTab:
         
         missing_libs = get_missing_libraries()
         if not missing_libs:
-            ttk.Label(self.lib_frame, text="✅ All optional libraries are available", 
-                     foreground='green').pack(anchor='w')
+            self.lib_status_label = ttk.Label(self.lib_frame, text="✅ All optional libraries are available")
+            self.lib_status_label.pack(anchor='w')
         else:
-            ttk.Label(self.lib_frame, text="⚠️ Some optional libraries are missing:", 
-                     foreground='orange').pack(anchor='w')
+            self.lib_status_label = ttk.Label(self.lib_frame, text="⚠️ Some optional libraries are missing:")
+            self.lib_status_label.pack(anchor='w')
+            
+            self.lib_detail_labels = []
             for name, install_cmd, impact in missing_libs:
-                ttk.Label(self.lib_frame, text=f"  • {name}: {install_cmd}", 
-                         foreground='gray', font=('Courier', 8)).pack(anchor='w')
+                label = ttk.Label(self.lib_frame, text=f"  • {name}: {install_cmd}", 
+                                 font=('Courier', 8))
+                label.pack(anchor='w')
+                self.lib_detail_labels.append(label)
+        
+        # Apply theme colors
+        self.update_library_colors()
+    
+    def update_library_colors(self):
+        """Update library status colors based on current theme"""
+        if hasattr(self.app, 'theme_manager'):
+            is_dark = self.app.dark_mode_var.get()
+            
+            missing_libs = get_missing_libraries()
+            if not missing_libs:
+                # Success color for all libraries available
+                success_color = self.app.theme_manager.get_text_color_for_type('success', is_dark)
+                self.lib_status_label.configure(foreground=success_color)
+            else:
+                # Warning color for missing libraries
+                warning_color = self.app.theme_manager.get_text_color_for_type('warning', is_dark)
+                self.lib_status_label.configure(foreground=warning_color)
+                
+                # Gray color for detail text
+                disabled_color = self.app.theme_manager.get_text_color_for_type('disabled', is_dark)
+                if hasattr(self, 'lib_detail_labels'):
+                    for label in self.lib_detail_labels:
+                        label.configure(foreground=disabled_color)
     
     def on_monitor_changed(self, event=None):
         """Handle monitor selection change"""
@@ -146,6 +195,12 @@ class DisplayTab:
         dialog.geometry("300x150")
         dialog.resizable(False, False)
         dialog.grab_set()
+        
+        # Apply theme to dialog
+        if hasattr(self.app, 'theme_manager'):
+            is_dark = self.app.dark_mode_var.get()
+            theme = self.app.theme_manager.dark_theme if is_dark else self.app.theme_manager.light_theme
+            dialog.configure(bg=theme['bg'])
         
         ttk.Label(dialog, text="Enter custom resolution:").pack(pady=10)
         

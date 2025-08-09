@@ -12,6 +12,7 @@ An automated script with a user-friendly GUI that plays Limbus Company for you b
 - [Installation](#-installation)
 - [Setup & Usage](#-setup--usage)
 - [GUI Interface](#-gui-interface)
+- [Theme & Appearance](#-theme--appearance)
 - [Multi-Monitor Support](#-multi-monitor-support)
 - [Settings & Customization](#-settings--customization)
 - [Troubleshooting](#-troubleshooting)
@@ -45,6 +46,7 @@ This script automatically:
 
 ### Key Features
 - ✅ **Modern GUI Interface** - easy-to-use tabbed interface
+- ✅ **Dark/Light Mode Support** - customizable theme that persists between sessions
 - ✅ Works with **multiple monitors**
 - ✅ Handles **different screen resolutions** automatically
 - ✅ Works with **Windows display scaling** (125%, 150%, etc.)
@@ -134,10 +136,50 @@ pip install pyautogui pillow keyboard screeninfo mss
 
 ---
 
+## 🎨 Theme & Appearance
+
+### Dark Mode Support
+The GUI now features a comprehensive theming system:
+
+**Theme Toggle:**
+- **Settings Tab**: Use the "Dark Mode" checkbox to switch themes
+- **Light Mode (Default)**: Clean white interface for daylight use
+- **Dark Mode**: Easy-on-the-eyes dark theme for extended sessions
+
+**Theme Features:**
+- **Automatic persistence**: Your theme preference saves to `settings.ini`
+- **Instant switching**: Toggle between themes without restarting
+- **Complete theming**: All GUI elements adapt to the selected theme
+- **Eye-friendly colors**: Carefully chosen colors for both themes
+
+**Color Schemes:**
+- **Light Theme**: White backgrounds, black text, blue accents
+- **Dark Theme**: Dark gray backgrounds, white text, teal accents
+
+### Theme Settings in Configuration
+
+The dark mode setting is automatically saved in your `settings.ini` file:
+
+```ini
+[GUI]
+SELECTED_MONITOR = Monitor 1
+RESOLUTION = 1920x1080
+# Set to true to enable dark mode (default is false for light mode)
+DARK_MODE = false
+```
+
+**Default Behavior:**
+- **First-time users**: Starts in light mode
+- **Missing GUI section**: Automatically creates with light mode default
+- **Invalid settings**: Falls back to light mode
+- **Settings persistence**: Theme choice remembered between sessions
+
+---
+
 ## 🖥️ GUI Interface
 
 ### Tabbed Interface
-The application now features a modern tabbed interface:
+The application now features a modern tabbed interface with full theme support:
 
 **Control Tab** - Main operations:
 - Start/Stop detection with visual feedback
@@ -146,6 +188,7 @@ The application now features a modern tabbed interface:
 - Live status updates
 
 **Settings Tab** - Configuration:
+- **Theme Selection**: Dark/Light mode toggle with instant preview
 - Behavior settings (Alt+Tab, cursor control)
 - Detection timing and tolerance
 - Color settings with live previews
@@ -167,6 +210,7 @@ The application now features a modern tabbed interface:
 - **Status Messages**: Live updates on what the script is doing
 - **Visual Feedback**: Button states reflect current operation
 - **Settings Persistence**: Changes save automatically
+- **Theme Updates**: Instant theme switching without restart
 
 ---
 
@@ -207,6 +251,9 @@ The Display tab provides multiple resolution options:
 ### GUI Settings Management
 All settings can now be managed through the **Settings Tab**:
 
+**Appearance Settings:**
+- ☑️ **Dark Mode**: Toggle between light and dark themes
+
 **Behavior Settings:**
 - ☑️ Alt+Tab after click (switch away from game)
 - ☑️ Reset cursor position after click
@@ -223,7 +270,7 @@ All settings can now be managed through the **Settings Tab**:
 - **RGB sliders**: Precise color adjustment
 
 ### Settings File
-Settings are still stored in `settings.ini` and can be edited manually:
+Settings are stored in `settings.ini` and can be edited manually:
 
 ```ini
 [DETECTION]
@@ -249,13 +296,16 @@ DEBUG_LOGGING = false
 [GUI]
 SELECTED_MONITOR = Primary Monitor
 RESOLUTION = 1920x1080
+# Theme preference - saves automatically when changed
+DARK_MODE = false
 ```
 
 ### Real-time Configuration
 Changes made in the GUI:
-- **Apply immediately** - no restart required
+- **Apply immediately** - no restart required for theme changes
 - **Auto-save** when you close the application
 - **Manual save** button available in Control tab
+- **Theme persistence** - your preference is remembered
 
 ---
 
@@ -272,6 +322,11 @@ Changes made in the GUI:
 - Check file permissions in the application folder
 - Ensure you have write access to the directory
 - Use the "Save Settings" button in the Control tab
+
+**Theme not persisting:**
+- Verify the `[GUI]` section exists in `settings.ini`
+- Check that `DARK_MODE` setting is being saved
+- Try manually toggling dark mode in Settings tab
 
 ### Button Not Being Detected
 
@@ -299,6 +354,7 @@ Changes made in the GUI:
 - Try different resolution options from dropdown
 
 **GUI Display Problems:**
+- **Settings Tab**: Try switching themes to see if it helps
 - **Settings Tab**: Disable "Force cursor to monitor" 
 - **Display Tab**: Switch to primary monitor
 - Try running in windowed mode instead of fullscreen
@@ -316,6 +372,18 @@ Changes made in the GUI:
 
 ## 🔍 Advanced Features
 
+### Theme System
+
+**Comprehensive Dark Mode:**
+- **Automatic UI adaptation**: All interface elements change color
+- **Eye-friendly design**: Carefully chosen colors for comfortable viewing
+- **Persistent preference**: Theme choice automatically saved to settings
+- **Instant switching**: No restart required when changing themes
+
+**Theme Colors:**
+- **Light Mode**: White backgrounds, black text, blue info text
+- **Dark Mode**: Dark gray backgrounds, white text, light blue accents
+
 ### Integrated Debug System
 
 **Built-in Log Viewer:**
@@ -323,6 +391,7 @@ Changes made in the GUI:
 - **Real-time updates**: See logs as they're generated
 - **Log management**: Clear or refresh log content
 - **No external file handling**: Everything in the GUI
+- **Theme-aware**: Log viewer adapts to selected theme
 
 **How to use:**
 1. **Settings Tab**: Enable "Debug logging"
@@ -341,6 +410,7 @@ limbus_auto_player/
 │   ├── __init__.py                  # GUI package initialization
 │   ├── main_window.py               # Main window and application logic
 │   ├── settings_manager.py          # Settings loading/saving logic
+│   ├── theme_manager.py             # Dark/light theme management
 │   ├── hotkey_manager.py            # Global hotkey functionality
 │   ├── detection_worker.py          # Detection thread worker
 │   └── tabs/                        # Tab implementations
@@ -357,6 +427,7 @@ limbus_auto_player/
     ├── detection.py
     ├── logger.py
     ├── utils.py
+    ├── settings_handler.py           # Comment-preserving settings handler
     └── library_checker.py
 ```
 
@@ -364,14 +435,16 @@ limbus_auto_player/
 
 **Modern Interface:**
 - **Tabbed design** for organized functionality
+- **Dual theme support** with light and dark modes
 - **Real-time status updates** in Control tab
 - **Live configuration display** showing current settings
 - **Visual feedback** for all operations
 
 **Smart Defaults:**
+- **Light mode default** for new installations
 - **Auto-detects** optimal monitor and resolution
 - **Suggests corrections** for common scaling issues
-- **Preserves settings** between sessions
+- **Preserves settings** between sessions including theme preference
 - **Validates input** to prevent errors
 
 **Advanced Controls:**
@@ -379,6 +452,7 @@ limbus_auto_player/
 - **Thread-safe operation** with proper cleanup
 - **Error handling** with user-friendly messages
 - **Library checking** with installation guidance
+- **Theme-aware components** that adapt to selected mode
 
 ### How Detection Works
 The GUI shows this information in real-time:
@@ -390,6 +464,7 @@ The GUI shows this information in real-time:
 ### GUI vs Command Line
 The GUI provides all command-line functionality plus:
 - **Visual configuration** instead of text prompts
+- **Theme customization** with persistent preferences
 - **Real-time monitoring** of detection status
 - **Integrated debug viewing** without external files
 - **Settings validation** with immediate feedback
@@ -408,6 +483,7 @@ The GUI provides all command-line functionality plus:
 ### GUI Performance Tips
 - **Keep GUI open** while detection runs for best monitoring
 - **Use Log tab** for detailed troubleshooting
+- **Choose your preferred theme** for comfortable extended use
 - **Single monitor setup** is more reliable than multi-monitor
 - **Save settings** regularly using the GUI button
 
@@ -422,7 +498,7 @@ The GUI provides all command-line functionality plus:
 ## 🆘 Need More Help?
 
 ### Using the GUI for Troubleshooting:
-1. ✅ **Settings Tab**: Enable debug logging
+1. ✅ **Settings Tab**: Enable debug logging and choose comfortable theme
 2. ✅ **Control Tab**: Watch real-time status messages
 3. ✅ **Log Tab**: View detailed debug information
 4. ✅ **Display Tab**: Verify monitor and resolution settings
@@ -433,13 +509,15 @@ The GUI provides all command-line functionality plus:
 2. ✅ Try different settings using the Settings tab
 3. ✅ Check Display tab for scaling recommendations
 4. ✅ Ensure all files are in the same folder
+5. ✅ Note which theme you're using (shouldn't affect functionality but good to mention)
 
 ### When Reporting Issues:
 - **Include your Windows version** and screen resolution
 - **Use Log tab** to copy relevant debug information
-- **Screenshot the GUI** showing your settings
+- **Screenshot the GUI** showing your settings (either theme is fine)
 - **Describe exactly what happens** vs what you expected
 - **List any error messages** shown in the GUI
+- **Mention theme preference** if visual issues occur
 
 ---
 

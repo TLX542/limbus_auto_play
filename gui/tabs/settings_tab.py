@@ -14,6 +14,14 @@ class SettingsTab:
     
     def create_widgets(self):
         """Create the settings tab widgets"""
+        # Appearance settings
+        appearance_frame = ttk.LabelFrame(self.frame, text="Appearance", padding=10)
+        appearance_frame.pack(fill='x', pady=(0, 10))
+        
+        ttk.Checkbutton(appearance_frame, text="Dark mode", 
+                       variable=self.app.dark_mode_var, 
+                       command=self.app.toggle_dark_mode).pack(anchor='w')
+        
         # Behavior settings
         behavior_frame = ttk.LabelFrame(self.frame, text="Behavior Settings", padding=10)
         behavior_frame.pack(fill='x', pady=(0, 10))
