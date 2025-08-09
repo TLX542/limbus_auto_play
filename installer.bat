@@ -17,7 +17,6 @@ if %errorlevel% neq 0 (
 echo Python is installed!
 echo.
 
-echo Checking if tkinter is available...
 python -c "import tkinter" >nul 2>&1
 if %errorlevel% neq 0 (
     echo ERROR: tkinter is not available. This is required for the GUI.
