@@ -152,11 +152,20 @@ class DisplayTab:
                     for label in self.lib_detail_labels:
                         label.configure(foreground=disabled_color)
     
+    def restart_detection_if_running(self):
+        """Restart detection if it's currently running"""
+        if self.app.is_running:
+            self.app.add_status("🔄 Display settings changed - restarting detection...")
+            self.app.stop_detection()
+            # Use root.after to start detection after stop completes
+            self.app.root.after(500, self.app.start_detection)
+    
     def on_monitor_changed(self, event=None):
         """Handle monitor selection change"""
         selection = self.app.selected_monitor_var.get()
         if selection:
             # Find the selected monitor
+            old_monitor = self.app.selected_monitor
             for monitor in self.app.monitors:
                 status = " (Primary)" if monitor.get('is_primary', False) else ""
                 expected = f"{monitor['name']} ({monitor['width']}x{monitor['height']}){status}"
@@ -167,6 +176,10 @@ class DisplayTab:
                     self.app.resolution_var.set(f"{self.app.screen_width}x{self.app.screen_height}")
                     self.app.update_config_display()
                     self.app.settings_manager.save_gui_settings(self.app)
+                    
+                    # Restart detection if monitor actually changed and detection is running
+                    if old_monitor and old_monitor != monitor:
+                        self.restart_detection_if_running()
                     break
     
     def on_resolution_changed(self, event=None):
@@ -180,10 +193,21 @@ class DisplayTab:
                 # Extract width and height
                 res_part = resolution.split('(')[0].strip()
                 width_str, height_str = res_part.split('x')
-                self.app.screen_width = int(width_str.strip())
-                self.app.screen_height = int(height_str.strip())
+                new_width = int(width_str.strip())
+                new_height = int(height_str.strip())
+                
+                # Check if resolution actually changed
+                old_width = self.app.screen_width
+                old_height = self.app.screen_height
+                
+                self.app.screen_width = new_width
+                self.app.screen_height = new_height
                 self.app.update_config_display()
                 self.app.settings_manager.save_gui_settings(self.app)
+                
+                # Restart detection if resolution actually changed and detection is running
+                if (old_width != new_width or old_height != new_height):
+                    self.restart_detection_if_running()
                 
             except ValueError:
                 pass  # Invalid format, ignore
@@ -219,14 +243,23 @@ class DisplayTab:
         
         def apply_custom():
             try:
-                width = int(width_entry.get())
-                height = int(height_entry.get())
-                if width > 0 and height > 0:
-                    self.app.screen_width = width
-                    self.app.screen_height = height
-                    self.app.resolution_var.set(f"{width}x{height}")
+                new_width = int(width_entry.get())
+                new_height = int(height_entry.get())
+                if new_width > 0 and new_height > 0:
+                    # Check if resolution actually changed
+                    old_width = self.app.screen_width
+                    old_height = self.app.screen_height
+                    
+                    self.app.screen_width = new_width
+                    self.app.screen_height = new_height
+                    self.app.resolution_var.set(f"{new_width}x{new_height}")
                     self.app.update_config_display()
                     self.app.settings_manager.save_gui_settings(self.app)
+                    
+                    # Restart detection if resolution actually changed and detection is running
+                    if (old_width != new_width or old_height != new_height):
+                        self.restart_detection_if_running()
+                    
                     dialog.destroy()
                 else:
                     messagebox.showerror("Error", "Width and height must be positive numbers")

@@ -1,7 +1,7 @@
 """
 Limbus Auto Player - Hotkey Manager
 
-Handles global hotkey functionality for pause/resume.
+Handles global hotkey functionality for start/stop detection.
 """
 import threading
 
@@ -11,12 +11,12 @@ class HotkeyManager:
         self.setup_global_hotkey()
     
     def setup_global_hotkey(self):
-        """Set up global hotkey listener for pause/resume"""
+        """Set up global hotkey listener for start/stop detection"""
         def hotkey_thread():
             try:
                 import keyboard
-                # Set up the 'P' key listener
-                keyboard.add_hotkey('p', self.app.toggle_pause)
+                # Set up the 'P' key listener to toggle detection (start/stop)
+                keyboard.add_hotkey('p', self.app.toggle_detection)
                 # Keep the thread alive
                 keyboard.wait()  # This will block until the program ends
             except ImportError:

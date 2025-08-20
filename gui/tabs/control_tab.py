@@ -27,12 +27,6 @@ class ControlTab:
                                         width=20)
         self.toggle_button.pack(side='left', padx=(0, 10))
         
-        # Pause/resume button
-        self.pause_button = ttk.Button(control_buttons_frame, text="Pause (P)", 
-                                      command=self.app.toggle_pause, 
-                                      width=15, state='disabled')
-        self.pause_button.pack(side='left', padx=(0, 10))
-        
         # Save settings button
         save_button = ttk.Button(control_buttons_frame, text="Save Settings", 
                                 command=lambda: self.app.save_all_settings(show_message=True), 
@@ -43,7 +37,7 @@ class ControlTab:
         hotkey_frame = ttk.Frame(button_frame)
         hotkey_frame.pack(fill='x', pady=(10, 0))
         
-        self.hotkey_label = ttk.Label(hotkey_frame, text="💡 Press 'P' anywhere to pause/resume detection", 
+        self.hotkey_label = ttk.Label(hotkey_frame, text="💡 Press 'P' anywhere to start/stop detection", 
                                      font=('Arial', 9))
         self.hotkey_label.pack(anchor='w')
         
@@ -70,7 +64,7 @@ class ControlTab:
         """Update the configuration display"""
         target_color, secondary_color = self.app.get_current_colors()
         
-        status_text = "PAUSED" if self.app.is_paused else ("RUNNING" if self.app.is_running else "STOPPED")
+        status_text = "RUNNING" if self.app.is_running else "STOPPED"
         
         config_text = f"""Status: {status_text}
 Monitor: {self.app.selected_monitor['name'] if self.app.selected_monitor else 'None'}
@@ -91,17 +85,8 @@ Debug Logging: {'Yes' if self.app.debug_logging_var.get() else 'No'}"""
         """Update control button states"""
         if self.app.is_running:
             self.toggle_button.config(text="Stop Detection")
-            self.pause_button.config(state='normal')
         else:
             self.toggle_button.config(text="Start Detection")
-            self.pause_button.config(state='disabled')
-    
-    def update_pause_button(self):
-        """Update pause button text based on current state"""
-        if self.app.is_paused:
-            self.toggle_button.config(text="Resume Detection")
-        else:
-            self.toggle_button.config(text="Stop Detection")
     
     def update_hotkey_colors(self):
         """Update hotkey info color based on current theme"""

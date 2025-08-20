@@ -52,21 +52,6 @@ class DetectionWorker:
             scan_count = 0
             
             while self.app.is_running and not self.app.stop_event.is_set():
-                # Check if paused
-                if self.app.pause_event.is_set():
-                    # Update config display to show paused status
-                    self.app.root.after(0, self.app.update_config_display)
-                    # Wait while paused
-                    while self.app.pause_event.is_set() and self.app.is_running and not self.app.stop_event.is_set():
-                        time.sleep(0.1)
-                    
-                    # If we're no longer running, break out
-                    if not self.app.is_running or self.app.stop_event.is_set():
-                        break
-                    
-                    # Update display to show resumed status
-                    self.app.root.after(0, self.app.update_config_display)
-                
                 scan_count += 1
                 self.app.add_status(f"🔍 Scan #{scan_count}...")
                 
@@ -110,12 +95,10 @@ class DetectionWorker:
                 except Exception as e:
                     self.app.add_status(f"⚠️ Error in scan #{scan_count}: {e}")
                     
-                # Wait for next scan (check for pause/stop during wait)
+                # Wait for next scan
                 wait_time = self.app.check_interval_var.get()
                 elapsed = 0
                 while elapsed < wait_time and self.app.is_running and not self.app.stop_event.is_set():
-                    if self.app.pause_event.is_set():
-                        break  # Exit wait loop if paused
                     time.sleep(0.1)
                     elapsed += 0.1
                 

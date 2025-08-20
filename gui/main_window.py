@@ -274,40 +274,6 @@ class LimbusAutoPlayerGUI:
         if hasattr(self, 'control_tab'):
             self.control_tab.update_config_display()
     
-    def toggle_pause(self):
-        """Toggle pause/resume state when 'P' key is pressed"""
-        if not self.is_running:
-            return
-        
-        if self.is_paused:
-            self.resume_detection()
-        else:
-            self.pause_detection()
-    
-    def pause_detection(self):
-        """Pause the detection"""
-        if not self.is_running or self.is_paused:
-            return
-        
-        self.is_paused = True
-        self.pause_event.set()
-        self.add_status("⏸️ Detection PAUSED (Press 'P' to resume)")
-        
-        if hasattr(self, 'control_tab'):
-            self.root.after(0, lambda: self.control_tab.update_pause_button())
-    
-    def resume_detection(self):
-        """Resume the detection"""
-        if not self.is_running or not self.is_paused:
-            return
-        
-        self.is_paused = False
-        self.pause_event.clear()
-        self.add_status("▶️ Detection RESUMED")
-        
-        if hasattr(self, 'control_tab'):
-            self.root.after(0, lambda: self.control_tab.update_pause_button())
-    
     def toggle_detection(self):
         """Toggle detection on/off"""
         if not self.is_running:
@@ -325,9 +291,7 @@ class LimbusAutoPlayerGUI:
             return
             
         self.is_running = True
-        self.is_paused = False
         self.stop_event.clear()
-        self.pause_event.clear()
         
         # Update UI
         if hasattr(self, 'control_tab'):
@@ -337,7 +301,7 @@ class LimbusAutoPlayerGUI:
         self.detection_thread = threading.Thread(target=self.detection_worker.run, daemon=True)
         self.detection_thread.start()
         
-        self.add_status("🚀 Detection started! Press 'P' to pause/resume")
+        self.add_status("🚀 Detection started! Press 'P' to stop")
     
     def stop_detection(self):
         """Stop the detection"""
@@ -345,9 +309,7 @@ class LimbusAutoPlayerGUI:
             return
             
         self.is_running = False
-        self.is_paused = False
         self.stop_event.set()
-        self.pause_event.clear()
         
         # Update UI
         if hasattr(self, 'control_tab'):

@@ -108,8 +108,7 @@ pip install pyautogui pillow keyboard screeninfo mss
 ### Using the GUI
 
 #### Control Tab
-- **Start/Stop Detection**: Main control button to begin automation
-- **Pause/Resume**: Temporarily pause without stopping (also works with 'P' key)
+- **Start/Stop Detection**: Main control button to begin or stop automation (also works with 'P' key)
 - **Current Configuration**: View your current settings at a glance
 - **Real-time Status**: See what the script is doing moment by moment
 
@@ -131,7 +130,7 @@ pip install pyautogui pillow keyboard screeninfo mss
 ### Stopping the Application
 
 - **Press 'P'** anywhere on your keyboard to pause/resume
-- **Use GUI buttons** to stop, pause, or resume
+- **Use GUI buttons** to stop or start
 - **Close the window** to save settings and exit
 
 ---
